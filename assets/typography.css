@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+body {
+    font-family: 'DM Sans', Arial, sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+h1, h2, h3,
+.section-title,
+.viz-card-title,
+.section-label,
+.nav-pill,
+.q-tag,
+.dropdown-label {
+    font-family: 'Syne', Arial, sans-serif;
+}
