@@ -1,22 +1,10 @@
 import plotly.graph_objects as go
 import pandas as pd
-from hover_template import scatter_eleve
+from dash import dcc
 
-AXES_X = {
-    "Hours_Studied": "Heures d'étude par semaine",
-    "Attendance":    "Taux de présence (%)",
-}
-
-SYMBOL_VAR_OPTIONS = [
-    {"label": "Activités parascolaires", "value": "Parascolaire"},
-    {"label": "Accès internet",          "value": "Acces_internet"},
-    {"label": "Troubles d'apprentissage","value": "Troubles_apprentissage"},
-]
-
-DROPDOWN_OPTIONS = [
-    {"label": label, "value": col}
-    for col, label in AXES_X.items()
-]
+from .ids import ID
+from .graph_controller import AXES_X
+from .hover_template import make_hover_component
 
 COLORS = {"Homme": "#1a6fdb", "Femme": "#ff1493"}
 
@@ -26,8 +14,25 @@ SYMBOL_VAR_LABELS = {
     "Troubles_apprentissage":"Troubles d'apprentissage",
 }
 
+def make_graph(
+    df: pd.DataFrame,
+    col_x: str = "Hours_Studied",
+    col_symbol: str = "Parascolaire",
+):
+    return dcc.Graph(
+        id=ID["graph"],
+        figure=create_figure(df, col_x, col_symbol),
+        config={"displayModeBar": False},
+        className="graph",
+    )
 
-def create_figure(df: pd.DataFrame, col_x: str = "Hours_Studied", col_symbol: str = "Parascolaire") -> go.Figure:
+
+def create_figure(
+    df: pd.DataFrame,
+    col_x: str = "Hours_Studied",
+    col_symbol: str = "Parascolaire"
+) -> go.Figure:
+
     label_x = AXES_X.get(col_x, col_x)
     fig = go.Figure()
 
@@ -37,12 +42,14 @@ def create_figure(df: pd.DataFrame, col_x: str = "Hours_Studied", col_symbol: st
 
     for genre in ["Homme", "Femme"]:
         color = COLORS[genre]
+
         for val, symbol, opacity, show in [
             (val_oui, "circle", 0.65, True),
             (val_non, "circle", 0.20, False),
         ]:
             mask = (df["Genre"] == genre) & (df[col_symbol] == val)
             sub  = df[mask]
+
             fig.add_trace(go.Scatter(
                 x=sub[col_x],
                 y=sub["Exam_Score"],
@@ -57,9 +64,15 @@ def create_figure(df: pd.DataFrame, col_x: str = "Hours_Studied", col_symbol: st
                     opacity=opacity,
                     line=dict(width=1.4, color=color),
                 ),
-                hovertemplate=scatter_eleve(label_x, genre, str(val), SYMBOL_VAR_LABELS.get(col_symbol, col_symbol)),
+                hovertemplate=make_hover_component(
+                    label_x,
+                    genre,
+                    str(val),
+                    SYMBOL_VAR_LABELS.get(col_symbol, col_symbol)
+                ),
             ))
 
+    # Légende symboles
     fig.add_trace(go.Scatter(
         x=[None], y=[None], mode="markers",
         name=str(val_oui),
@@ -71,6 +84,7 @@ def create_figure(df: pd.DataFrame, col_x: str = "Hours_Studied", col_symbol: st
         marker=dict(color="grey", symbol="circle", size=7, opacity=0.20),
     ))
 
+    # Layout
     fig.update_layout(
         xaxis_title=label_x,
         yaxis_title="Note finale",
@@ -86,10 +100,26 @@ def create_figure(df: pd.DataFrame, col_x: str = "Hours_Studied", col_symbol: st
         transition=dict(duration=350, easing="cubic-in-out"),
         hovermode="closest",
         xaxis=dict(
-            tickvals=[0, 5, 10, 15, 20, 25, 30, 35, 40, 44] if col_x == "Hours_Studied" else [60, 65, 70, 75, 80, 85, 90, 95, 100],
+            tickvals=[0, 5, 10, 15, 20, 25, 30, 35, 40, 44]
+            if col_x == "Hours_Studied"
+            else [60, 65, 70, 75, 80, 85, 90, 95, 100],
         ),
     )
-    fig.update_xaxes(showgrid=True, gridcolor="#e8e0d0", zeroline=False, linecolor="#1a1a1a", linewidth=1.5)
-    fig.update_yaxes(showgrid=True, gridcolor="#e8e0d0", zeroline=False, linecolor="#1a1a1a", linewidth=1.5)
+
+    fig.update_xaxes(
+        showgrid=True,
+        gridcolor="#e8e0d0",
+        zeroline=False,
+        linecolor="#1a1a1a",
+        linewidth=1.5
+    )
+
+    fig.update_yaxes(
+        showgrid=True,
+        gridcolor="#e8e0d0",
+        zeroline=False,
+        linecolor="#1a1a1a",
+        linewidth=1.5
+    )
 
     return fig

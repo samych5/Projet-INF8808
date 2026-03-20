@@ -1,19 +1,20 @@
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
-from hover_template import jitter_eleve
+from dash import dcc
 
-AXES_X = {
-    "Tutoring_Sessions": "Séances de tutorat",
-    "Physical_Activity": "Activité physique (sessions/semaine)",
-    "Sleep_Hours":       "Heures de sommeil par nuit",
-}
+from .ids import ID
+from .graph_controller import AXES_X
+from .hover_template import make_hover_component
 
-DROPDOWN_OPTIONS = [
-    {"label": label, "value": col}
-    for col, label in AXES_X.items()
-]
 
+def make_graph(df, col_x = "Tutoring_Sessions"):
+    return dcc.Graph(
+        id=ID["graph"],
+        figure=create_figure(df, col_x),
+        config={"displayModeBar": False},
+        className="graph",
+    )
 
 def create_figure(df: pd.DataFrame, col_x: str = "Tutoring_Sessions") -> go.Figure:
     label_x = AXES_X.get(col_x, col_x)
@@ -38,7 +39,7 @@ def create_figure(df: pd.DataFrame, col_x: str = "Tutoring_Sessions") -> go.Figu
                 opacity=0.45,
                 line=dict(width=0),
             ),
-            hovertemplate=jitter_eleve(label_x, genre),
+            hovertemplate=make_hover_component(label_x, genre),
         ))
 
     fig.update_layout(

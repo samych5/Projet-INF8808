@@ -1,5 +1,101 @@
-body {
-    background-color: #f5f2eb;
-    margin: 0;
-    padding: 0;
+.story-section {
+  display: grid;
+  gap: 40px;
+  margin: 0 auto;
+  padding: 0 40px;
+  width: 90%;
+}
+
+.scatter-section,
+.jitter-section {
+  grid-template-columns: 1fr 3fr;
+}
+
+.story-text-column {
+  position: relative;
+}
+
+.story-step {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  opacity: 0.35;
+  transition: opacity 0.3s ease;
+}
+
+.story-step.active {
+  opacity: 1;
+}
+
+.story-graph-column {
+  position: relative;
+}
+
+.story-graph-sticky {
+  position: sticky;
+  top: 10vh;
+  height: 80vh;
+  display: flex;
+  align-items: center;
+}
+
+.text-card {
+  width: 100%;
+  background: white;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.text-card-title {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.text-card-paragraph {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.graph-controller {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  gap: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.graphs-controller-element {
+  width: 350px;
+}
+
+.graph-panel {
+  width: 100%;
+}
+
+.graph-panel-inner {
+  width: 100%;
+}
+
+.story-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40vh;
+}
+
+.home-section {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 40px;
+}
+
+.graph {
+  width: 100%;
+  height: 80vh;
+  min-height: 650px;
+  min-width: 800px;
 }

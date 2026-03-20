@@ -1,44 +1,56 @@
 from dash import html, dcc
-from scatter import DROPDOWN_OPTIONS, SYMBOL_VAR_OPTIONS
-from jitter import DROPDOWN_OPTIONS as JITTER_OPTIONS
+
+from graphs.scatter.template import make_section as make_scatter_section
+from graphs.jitter.template import make_section as make_jitter_section
 
 
-def get_layout():
-    return html.Div([
-        html.Div([
-            dcc.Dropdown(
-                id="dropdown-scatter-x",
-                options=DROPDOWN_OPTIONS,
-                value="Hours_Studied",
-                clearable=False,
-                style={"width": "350px"},
+def get_home_section():
+    return html.Section(
+        id="home-section",
+        className="home-section",
+        children=[
+            html.Div(
+                className="home-overlay",
+                children=[
+                    html.H1("Titre du site", className="home-title"),
+                    html.P(
+                        "Texte random",
+                        className="home-subtitle",
+                    ),
+                ],
+            )
+        ],
+    )
+
+
+def get_story_sections(df):
+    """
+    Appelle les template.py de chaque graphique
+    et retourne la liste des sections scrollytelling.
+    """
+    return [
+        make_scatter_section(df),
+        make_jitter_section(df),
+    ]
+
+
+def get_layout(df):
+    """
+    Layout principal de l'application Dash.
+    """
+    return html.Div(
+        id="page-container",
+        className="page-container",
+        children=[
+            dcc.Store(id="active-step", data=0),
+            dcc.Store(id="active-graph", data="scatter"),
+
+            get_home_section(),
+
+            html.Main(
+                id="story-container",
+                className="story-container",
+                children=get_story_sections(df),
             ),
-            dcc.Dropdown(
-                id="dropdown-scatter-symbol",
-                options=SYMBOL_VAR_OPTIONS,
-                value="Parascolaire",
-                clearable=False,
-                style={"width": "350px"},
-            ),
-        ], style={"display": "flex", "gap": "20px", "justifyContent": "center", "margin": "20px auto"}),
-        dcc.Graph(
-            id="graph-scatter",
-            config={"displayModeBar": False},
-            style={"height": "600px", "width": "900px", "margin": "0 auto"},
-        ),
-        
-        html.Div([
-            dcc.Dropdown(
-                id="dropdown-jitter-x",
-                options=JITTER_OPTIONS,
-                value="Tutoring_Sessions",
-                clearable=False,
-                style={"width": "350px"},
-            ),
-        ], style={"display": "flex", "justifyContent": "center", "margin": "40px auto 10px auto"}),
-        dcc.Graph(
-            id="graph-jitter",
-            config={"displayModeBar": False},
-            style={"height": "600px", "width": "900px", "margin": "0 auto"},
-        ),
-    ])
+        ],
+    )
