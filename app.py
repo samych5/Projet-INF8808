@@ -2,15 +2,20 @@ from server import app
 from preprocess import get_data
 from template import get_layout
 
-from graphs.scatter.callbacks import register_callbacks as register_scatter_callbacks
-from graphs.jitter.callbacks import register_callbacks as register_jitter_callbacks
+from sections import SECTIONS, DEFAULT_STEP
 
 
 df = get_data()
 app.layout = get_layout(df)
 
-register_scatter_callbacks(app, df)
-register_jitter_callbacks(app, df)
+def register_callbacks(df):
+    init_step = DEFAULT_STEP
+
+    for section in SECTIONS:
+        section["callback"](app, df, init_step)
+        init_step += section["n_steps"]()
+
+register_callbacks(df)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -4,7 +4,7 @@ from .graph import create_figure
 from .ids import ID
 
 
-def register_callbacks(app, df):
+def register_callbacks(app, df, init_step):
     @app.callback(
         Output(ID["graph"],      "figure"),
         Input(ID["dropdown-x"],  "value"),

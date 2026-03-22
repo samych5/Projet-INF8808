@@ -1,7 +1,6 @@
 from dash import html, dcc
 
-from graphs.scatter.template import make_section as make_scatter_section, get_steps_number as scatter_steps
-from graphs.jitter.template import make_section as make_jitter_section, get_steps_number as jitter_steps
+from sections import SECTIONS, DEFAULT_STEP
 
 
 def get_home_section():
@@ -29,14 +28,9 @@ def get_story_sections(df):
     et retourne la liste complète des sections scrollytelling.
     """
     result = []
-    init_step = 1
+    init_step = DEFAULT_STEP
 
-    sections = [
-        {"function": make_scatter_section, "n_steps": scatter_steps},
-        {"function": make_jitter_section, "n_steps": jitter_steps},
-    ]
-
-    for section in sections:
+    for section in SECTIONS:
         result.append(section["function"](df, init_step))
         init_step += section["n_steps"]()
 
