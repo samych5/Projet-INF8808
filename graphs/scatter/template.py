@@ -10,11 +10,14 @@ SCATTER_TEXTS = [
     "Texte scatter 2",
 ]
 
+def get_steps_number():
+    return len(SCATTER_TEXTS)
 
-def make_text_steps():
+def make_text_steps(start_index : int = 1):
     return [
         html.Div(
             className="story-step scatter-step",
+            **{"data-step": str(step_index)},
             children=[
                 html.Div(
                     className="text-card",
@@ -25,18 +28,18 @@ def make_text_steps():
                 )
             ],
         )
-        for text in SCATTER_TEXTS
+        for step_index, text in enumerate(SCATTER_TEXTS, start=start_index)
     ]
 
 
-def make_section(df: DataFrame):
+def make_section(df: DataFrame, start_index : int = 1):
     return html.Section(
         id="section-scatter",
         className="story-section scatter-section",
         children=[
             html.Div(
                 className="story-text-column",
-                children=make_text_steps(),
+                children=make_text_steps(start_index),
             ),
 
             html.Div(

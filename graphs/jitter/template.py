@@ -11,11 +11,14 @@ JITTER_TEXTS = [
     "Texte jitter 3",
 ]
 
+def get_steps_number():
+    return len(JITTER_TEXTS)
 
-def make_text_steps():
+def make_text_steps(start_index = 1):
     return [
         html.Div(
             className="story-step jitter-step",
+            **{"data-step": str(step_index)},
             children=[
                 html.Div(
                     className="text-card",
@@ -26,18 +29,17 @@ def make_text_steps():
                 )
             ],
         )
-        for text in JITTER_TEXTS
+        for step_index, text in enumerate(JITTER_TEXTS, start=start_index)
     ]
 
-
-def make_section(df: DataFrame):
+def make_section(df: DataFrame, start_index = 1):
     return html.Section(
         id="section-jitter",
         className="story-section jitter-section",
         children=[
             html.Div(
                 className="story-text-column",
-                children=make_text_steps(),
+                children=make_text_steps(start_index),
             ),
             html.Div(
                 className="story-graph-column",
