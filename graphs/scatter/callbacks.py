@@ -1,26 +1,41 @@
-from dash import Input, Output, no_update
+from dash import clientside_callback, ClientsideFunction, Input, Output, no_update
+import time
 
 from .steps_config import get_step_config
 from .template import get_steps_number
 from .graph import create_figure
 from .ids import ID
 
+
 def register_callbacks(app, df, init_step : int):
 
-    @app.callback(
+    # @app.callback(
+    #     Output(ID["graph"], "figure"),
+    #     Input("active-step-input", "value"),
+    #     State(ID["dropdown-x"], "value"),
+    #     State(ID["dropdown-symbol"], "value"),
+    # )
+    # def update_scatter(active_step, col_x, col_symbol):
+    #     step = int(active_step or init_step) - init_step
+
+    #     if(step > get_steps_number()):
+    #         return no_update
+
+    #     t0 = time.time()
+    #     config = get_step_config(step, col_x, col_symbol)
+    #     figure = create_figure(df, **config)
+    #     print("temps pour render la fig ", time.time() - t0)
+
+    #     return figure
+
+    clientside_callback(
+        ClientsideFunction(namespace="clientside", function_name="update_scatter"),
         Output(ID["graph"], "figure"),
         Input("active-step-input", "value"),
+        Input(ID["figures-store"], "data"),
         Input(ID["dropdown-x"], "value"),
         Input(ID["dropdown-symbol"], "value"),
     )
-    def update_scatter(active_step, col_x, col_symbol):
-        step = int(active_step or init_step) - init_step
-
-        if(step > get_steps_number()):
-            return no_update
-
-        config = get_step_config(step, col_x, col_symbol)
-        return create_figure(df, **config)
 
     @app.callback(
         Output(ID["dropdown-x"], "value"),

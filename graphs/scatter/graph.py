@@ -34,6 +34,8 @@ def create_figure(
     show_legend: bool = True,
     layers: list[dict] | None = None,
 ) -> go.Figure:
+    print('create figure called')
+
     if visible_genres is None:
         visible_genres = ["Homme", "Femme"]
 
@@ -135,6 +137,9 @@ def create_figure(
     for layer in layers:
         add_layer_to_figure(fig, layer)
 
+    fig.update_layout(
+        transition=dict(duration=0)
+    )
     return fig
 
 def add_layer_to_figure(fig: go.Figure, layer: dict):

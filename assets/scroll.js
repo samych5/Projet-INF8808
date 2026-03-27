@@ -32,7 +32,7 @@ window.addEventListener("DOMContentLoaded", function () {
         });
       },
       {
-        threshold: 0.55,
+        threshold: 0.2,
       },
     );
 
