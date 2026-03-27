@@ -4,6 +4,7 @@ from template import get_layout
 
 from sections import SECTIONS, DEFAULT_STEP
 
+server = app.server
 
 df = get_data()
 app.layout = get_layout(df)
