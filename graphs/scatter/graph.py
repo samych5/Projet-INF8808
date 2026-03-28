@@ -2,55 +2,35 @@ import plotly.graph_objects as go
 import pandas as pd
 from dash import dcc
 
-from .ids import ID
-from .graph_controller import AXES_X
+from .steps_config import GraphConfig, get_step_graph_config
 from .hover_template import make_hover_component
+from .variables import *
 
-COLORS = {"Homme": "#1a6fdb", "Femme": "#ff1493"}
+COLORS = {Genres.MEN: "#1a6fdb", Genres.WOMEN: "#ff1493"}
 
-SYMBOL_VAR_LABELS = {
-    "Parascolaire":          "Parascolaire",
-    "Acces_internet":        "Accès internet",
-    "Troubles_apprentissage":"Troubles d'apprentissage",
-}
-
-def make_graph(
+def make_initial_graph(
     df: pd.DataFrame,
-    col_x: str = "Hours_Studied",
-    col_symbol: str = "Parascolaire",
 ):
     return dcc.Graph(
         id=ID["graph"],
-        figure=create_figure(df, col_x, col_symbol),
+        figure=create_figure(df, get_step_graph_config(0)),
         config={"displayModeBar": False},
         className="graph",
     )
 
 def create_figure(
     df: pd.DataFrame,
-    col_x: str = "Hours_Studied",
-    col_symbol: str = "Parascolaire",
-    visible_genres: list[str] | None = None,
-    show_legend: bool = True,
-    layers: list[dict] | None = None,
+    config: GraphConfig,
 ) -> go.Figure:
-    print('create figure called')
-
-    if visible_genres is None:
-        visible_genres = ["Homme", "Femme"]
-
-    if layers is None:
-        layers = []
-
-    label_x = AXES_X.get(col_x, col_x)
+    label_x = AXES_X.get(config.col_x)
     fig = go.Figure()
 
-    vals = df[col_symbol].dropna().unique()
+    vals = df[config.col_symbol].dropna().unique()
     val_oui = vals[0]
     val_non = vals[1] if len(vals) > 1 else vals[0]
 
-    for genre in ["Homme", "Femme"]:
-        if genre not in visible_genres:
+    for genre in Genres:
+        if genre.value not in config.visible_genres:
             continue
 
         color = COLORS[genre]
@@ -59,16 +39,16 @@ def create_figure(
             (val_oui, "circle", 0.65, True),
             (val_non, "circle", 0.20, False),
         ]:
-            mask = (df["Genre"] == genre) & (df[col_symbol] == val)
+            mask = (df["Genre"] == genre.value) & (df[config.col_symbol] == val)
             sub = df[mask]
 
             fig.add_trace(go.Scatter(
-                x=sub[col_x],
+                x=sub[config.col_x],
                 y=sub["Exam_Score"],
                 mode="markers",
-                name=genre,
+                name=genre.value,
                 showlegend=show,
-                legendgroup=genre,
+                legendgroup=genre.value,
                 marker=dict(
                     color=color,
                     symbol=symbol,
@@ -78,13 +58,13 @@ def create_figure(
                 ),
                 hovertemplate=make_hover_component(
                     label_x,
-                    genre,
+                    genre.value,
                     str(val),
-                    SYMBOL_VAR_LABELS.get(col_symbol, col_symbol)
+                    SYMBOL_VAR_LABELS.get(config.col_symbol)
                 ),
             ))
 
-    if show_legend:
+    if config.show_legend:
         fig.add_trace(go.Scatter(
             x=[None], y=[None], mode="markers",
             name=str(val_oui),
@@ -102,7 +82,7 @@ def create_figure(
         plot_bgcolor="white",
         paper_bgcolor="white",
         font=dict(family="DM Sans, Arial", size=13, color="#1a1a1a"),
-        showlegend=show_legend,
+        showlegend=config.show_legend,
         legend=dict(
             bgcolor="rgba(255,255,255,0.9)",
             bordercolor="#d8d0c0",
@@ -113,7 +93,7 @@ def create_figure(
         hovermode="closest",
         xaxis=dict(
             tickvals=[0, 5, 10, 15, 20, 25, 30, 35, 40, 44]
-            if col_x == "Hours_Studied"
+            if config.col_x ==  ColX.HOURS_STUDIED.value
             else [60, 65, 70, 75, 80, 85, 90, 95, 100],
         ),
     )
@@ -134,13 +114,15 @@ def create_figure(
         linewidth=1.5
     )
 
-    for layer in layers:
+    for layer in config.layers:
         add_layer_to_figure(fig, layer)
 
     fig.update_layout(
         transition=dict(duration=0)
     )
+
     return fig
+
 
 def add_layer_to_figure(fig: go.Figure, layer: dict):
     layer_type = layer.get("type")

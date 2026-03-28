@@ -62,4 +62,8 @@ def create_figure(df: pd.DataFrame, col_x: str = "Tutoring_Sessions") -> go.Figu
     fig.update_xaxes(showgrid=True, gridcolor="#e8e0d0", zeroline=False, linecolor="#1a1a1a", linewidth=1.5)
     fig.update_yaxes(showgrid=True, gridcolor="#e8e0d0", zeroline=False, linecolor="#1a1a1a", linewidth=1.5)
 
+    fig.update_layout(
+        transition=dict(duration=0)
+    )
+
     return fig

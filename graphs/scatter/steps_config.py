@@ -1,46 +1,37 @@
-from .graph import create_figure
+from .variables import *
 
+class GraphConfig:
+    def __init__(
+        self,
+        col_x : ColX = ColX.HOURS_STUDIED,
+        col_symbol : SymbolVar = SymbolVar.EXTRACURRICULAR_ACTIVITIES,
+        visible_gender: list[Genres] = [Genres.MEN, Genres.WOMEN],
+        show_legend: bool = True,
+        layers : list = [],
+        enable_interactions: bool = False
+    ):
+        self.col_x = col_x.value
+        self.col_symbol = col_symbol.value
+        self.visible_genres = [gender.value for gender in visible_gender]
+        self.show_legend = show_legend
+        self.layers = layers
+        self.enable_interactions = enable_interactions
 
-def get_step_config(step: int, col_x: str = "", col_symbol: str = "") -> dict:
-    if step <= 0:
-        return {
-            "col_x": "Hours_Studied",
-            "col_symbol": "Parascolaire",
-            "visible_genres": ["Homme"],
-            "show_legend": False,
-            "layers": [],
-        }
+class StepParameters:
+    def __init__(self, text: str, graph_config : GraphConfig):
+        self.text = text
+        self.graph_config = graph_config
 
-    elif step == 1:
-        return {
-            "col_x": "Hours_Studied",
-            "col_symbol": "Parascolaire",
-            "visible_genres": ["Homme", "Femme"],
-            "show_legend": True,
-            "layers": [],
-        }
+STEPS_CONFIG : list[StepParameters] = [
+    StepParameters("text 1 test", GraphConfig(col_x=ColX.HOURS_STUDIED)),
+    StepParameters("text 2", GraphConfig(col_x=ColX.ATTENDANCE)),
+    StepParameters("text 3", GraphConfig(col_x=ColX.HOURS_STUDIED, visible_gender=[Genres.MEN])),
+    StepParameters(text="text 4", graph_config=GraphConfig(enable_interactions=True))
+]
 
-    else:
-        if( not col_x or not col_symbol):
-            raise(ValueError("col_x and col_symbol need to have a value"))
-        return {
-            "col_x": col_x,
-            "col_symbol": col_symbol,
-            "visible_genres": ["Homme", "Femme"],
-            "show_legend": True,
-            "layers": [],
-        }
+DEFAULT_CONFIG : StepParameters = StepParameters("default_text", GraphConfig())
 
-
-def precompute_scatter_story_figures(df, init_step: int):
-    store = {}
-
-    for local_step in [0, 1]:
-        global_step = str(init_step + local_step)
-        config = get_step_config(local_step)
-        fig = create_figure(df, **config)
-        store[global_step] = {
-            "__default__": fig.to_plotly_json()
-        }
-
-    return store
+def get_step_graph_config(step: int) -> GraphConfig:
+    if(step > len(STEPS_CONFIG) - 1 or step < 0):
+        return DEFAULT_CONFIG.graph_config
+    return STEPS_CONFIG[step].graph_config
