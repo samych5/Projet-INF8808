@@ -18,7 +18,7 @@ def make_text_steps(start_index : int = 1):
                 html.Div(
                     className="text-card",
                     children=[
-                        html.H3("Scatter plot", className="text-card-title"),
+                        html.H3(step_config.title, className="text-card-title"),
                         html.P(step_config.text, className="text-card-paragraph"),
                     ],
                 )
