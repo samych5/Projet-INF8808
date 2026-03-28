@@ -13,8 +13,8 @@ def register_callbacks(df):
     init_step = DEFAULT_STEP
 
     for section in SECTIONS:
-        section["callback"](app, df, init_step)
-        init_step += section["n_steps"]()
+        section.callback(app, df, init_step)
+        init_step += section.get_steps_number()
 
 register_callbacks(df)
 

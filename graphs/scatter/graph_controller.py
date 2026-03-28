@@ -12,7 +12,7 @@ SYMBOL_VAR_OPTIONS = [
     for var in SymbolVar
 ]
 
-def make_scatter_controller():
+def make_controller():
     return html.Div(
         id="scatter-controls",
         children=[

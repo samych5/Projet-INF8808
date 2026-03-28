@@ -2,7 +2,7 @@ from dash import html, dcc
 from pandas import DataFrame
 
 from .steps_config import STEPS_CONFIG, get_step_graph_config, GraphConfig
-from .graph_controller import make_scatter_controller
+from .graph_controller import make_controller
 from .graph import create_figure, make_initial_graph
 from .variables import *
 
@@ -67,7 +67,7 @@ def make_section(df: DataFrame, start_index : int = 1):
                                     html.Div(
                                         className="graph-panel-inner",
                                         children=[
-                                            make_scatter_controller(),
+                                            make_controller(),
                                             make_initial_graph(df),
                                         ],
                                     )

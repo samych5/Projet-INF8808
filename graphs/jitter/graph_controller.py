@@ -1,16 +1,10 @@
 from dash import html, dcc
 
-from .ids import ID
-
-AXES_X = {
-    "Tutoring_Sessions": "Séances de tutorat",
-    "Physical_Activity": "Activité physique (sessions/semaine)",
-    "Sleep_Hours":       "Heures de sommeil par nuit",
-}
+from .variables import *
 
 DROPDOWN_OPTIONS = [
-    {"label": label, "value": col}
-    for col, label in AXES_X.items()
+    {"label": AXES_X[col], "value": col.value}
+    for col in ColX
 ]
 
 def make_controller():
@@ -19,7 +13,7 @@ def make_controller():
             dcc.Dropdown(
                 id=ID["dropdown-x"],
                 options=DROPDOWN_OPTIONS,
-                value="Tutoring_Sessions",
+                value=ColX.TUTORING_SESSIONS.value,
                 clearable=False,
                 className="graphs-controller-element",
             ),

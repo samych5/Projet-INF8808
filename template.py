@@ -31,8 +31,8 @@ def get_story_sections(df):
     init_step = DEFAULT_STEP
 
     for section in SECTIONS:
-        result.append(section["function"](df, init_step))
-        init_step += section["n_steps"]()
+        result.append(section.construction_function(df, init_step))
+        init_step += section.get_steps_number()
 
     return result
 
