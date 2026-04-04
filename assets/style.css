@@ -98,3 +98,90 @@
   min-height: 650px;
   min-width: 800px;
 }
+
+.heat-map-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.heat-map-question-view {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+.heat-map-question-card {
+  background: #ffffff;
+  padding: 36px 48px;
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  max-width: 1000px;
+  width: 100%;
+  text-align: center;
+}
+
+.heat-map-question-title {
+  margin: 0;
+}
+
+.heat-map-question-buttons {
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  min-height: 48px;
+}
+
+.heat-map-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #ececec;
+}
+
+.heat-map-question-feedback {
+  margin-top: 20px;
+  min-height: 28px;
+  line-height: 1.5;
+}
+
+.heat-map-question-pie-wrapper {
+  margin-top: 20px;
+  display: none;
+  justify-content: center;
+}
+
+.heat-map-pie-chart {
+  width: 100%;
+  max-width: 460px;
+  height: 200px;
+}
+
+.heat-map-result-view {
+  width: 100%;
+  margin-top: 60px;
+}
+
+.heat-map-content-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.heat-map-content-row .story-text-column {
+  width: 30%;
+}
+
+.heat-map-content-row .story-graph-column {
+  width: 70%;
+}
+
+.heat-map-section .story-graph-sticky {
+  position: sticky;
+  top: 10vh;
+}
