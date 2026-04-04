@@ -75,7 +75,7 @@ def make_controller(df):
                 children=[
                     html.Button("←", id=ID["filters-prev-btn"], n_clicks=0, className="beeswarm-page-btn"),
                     html.Div(
-                        f"Page 1 / {n_pages}",
+                        f"Filtres 1 / {n_pages}",
                         id=ID["filters-page-label"],
                         className="beeswarm-page-label",
                     ),

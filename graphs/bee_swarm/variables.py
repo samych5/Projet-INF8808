@@ -68,12 +68,15 @@ PALETTE = [
 ]
 
 ID = {
-    "section": "section-beeswarm",
-    "graph": "graph-beeswarm",
-    "filters-panel": "beeswarm-filters-panel",
-
-    "filters-page-store": "beeswarm-filters-page-store",
-    "filters-prev-btn": "beeswarm-filters-prev-btn",
-    "filters-next-btn": "beeswarm-filters-next-btn",
-    "filters-page-label": "beeswarm-filters-page-label",
+    "graph": "beeswarm-graph",
+    "selected-filters-store": "beeswarm-selected-filters-store",
+    "filter-page-store": "beeswarm-filter-page-store",
+    "filters-container": "beeswarm-filters-container",
+    "active-filters-bar": "beeswarm-active-filters-bar",
+    "page-label": "beeswarm-page-label",
+    "prev-page-btn": "beeswarm-prev-page-btn",
+    "next-page-btn": "beeswarm-next-page-btn",
+    "reset-all-btn": "beeswarm-reset-all-btn",
 }
+
+FILTERS_PER_PAGE = 3

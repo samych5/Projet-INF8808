@@ -117,20 +117,35 @@ FILTERS = {
 FILTER_KEYS = list(FILTERS.keys())
 
 
-def compute_y(df: pd.DataFrame, step: float = 5.5):
+def compute_y(df: pd.DataFrame, step: float = 7.0) -> np.ndarray:
     df_reset = df.reset_index(drop=True)
     y = np.zeros(len(df_reset))
 
-    for score, group in df_reset.groupby("Exam_Score"):
+    for _, group in df_reset.groupby("Exam_Score", sort=True):
         indices = group.index.tolist()
         for k, idx in enumerate(indices):
-            col = k // 2 if k % 2 == 0 else -(k // 2 + 1)
-            y[idx] = col * step
+            if k == 0:
+                y[idx] = 0
+            else:
+                level = (k + 1) // 2
+                sign = 1 if k % 2 == 1 else -1
+                y[idx] = sign * level * step
 
     return y
 
 
-def make_hover(df: pd.DataFrame):
+def compute_x(df: pd.DataFrame, jitter_strength: float = 0.12) -> np.ndarray:
+    rng = np.random.default_rng(42)
+    x = df["Exam_Score"].astype(float).to_numpy().copy()
+
+    for _, group in df.groupby("Exam_Score", sort=True):
+        indices = group.index.to_numpy()
+        x[indices] += rng.uniform(-jitter_strength, jitter_strength, size=len(indices))
+
+    return x
+
+
+def make_hover(df: pd.DataFrame) -> list[str]:
     return (
         "<b>Score à l'examen : " + df["Exam_Score"].astype(str) + "</b><br>"
         + "Heures d'étude : " + df["Hours_Studied"].astype(str) + "<br>"
@@ -142,7 +157,7 @@ def make_hover(df: pd.DataFrame):
     ).tolist()
 
 
-def build_match_mask(df: pd.DataFrame, selected_filters: dict):
+def build_match_mask(df: pd.DataFrame, selected_filters: dict) -> np.ndarray:
     mask = np.ones(len(df), dtype=bool)
 
     for col, selected_value in selected_filters.items():
@@ -167,25 +182,62 @@ def build_match_mask(df: pd.DataFrame, selected_filters: dict):
     return mask
 
 
-def create_figure(df: pd.DataFrame, selected_filters: dict | None = None):
+def get_filter_display_value(filter_key: str, value) -> str:
+    filter_meta = FILTERS[filter_key]
+
+    if filter_meta["type"] == "categorical":
+        labels_map = filter_meta.get("labels", {})
+        return labels_map.get(value, str(value))
+
+    return str(value)
+
+
+def get_active_filters_text(selected_filters: dict) -> list[str]:
+    items: list[str] = []
+
+    for filter_key in FILTER_KEYS:
+        if filter_key not in selected_filters:
+            continue
+
+        filter_value = selected_filters[filter_key]
+        if not filter_value:
+            continue
+
+        filter_meta = FILTERS[filter_key]
+        label = filter_meta["label"]
+
+        if filter_meta["type"] == "categorical":
+            display_values = [get_filter_display_value(filter_key, value) for value in filter_value]
+            items.append(f"{label} : {', '.join(display_values)}")
+        else:
+            items.append(f"{label} : {filter_value[0]} à {filter_value[1]}")
+
+    return items
+
+
+def create_figure(df: pd.DataFrame, selected_filters: dict | None = None) -> go.Figure:
     df_plot = df.reset_index(drop=True)
-    y_positions = compute_y(df_plot)
-    hover = make_hover(df_plot)
 
     if selected_filters is None:
         selected_filters = {}
 
+    x_positions = compute_x(df_plot, jitter_strength=0.12)
+    y_positions = compute_y(df_plot, step=7.0)
+    hover = make_hover(df_plot)
     highlight_mask = build_match_mask(df_plot, selected_filters)
 
+    mean_all = df_plot["Exam_Score"].mean()
+    mean_filtered = df_plot.loc[highlight_mask, "Exam_Score"].mean() if highlight_mask.any() else None
+
     background_trace = go.Scatter(
-        x=df_plot["Exam_Score"],
+        x=x_positions,
         y=y_positions,
         mode="markers",
         showlegend=False,
         marker=dict(
             color="#d1d5db",
-            size=5,
-            opacity=0.28,
+            size=4,
+            opacity=0.26,
             line=dict(width=0),
         ),
         text=hover,
@@ -193,31 +245,81 @@ def create_figure(df: pd.DataFrame, selected_filters: dict | None = None):
     )
 
     highlight_trace = go.Scatter(
-        x=df_plot.loc[highlight_mask, "Exam_Score"],
+        x=x_positions[highlight_mask],
         y=y_positions[highlight_mask],
         mode="markers",
         showlegend=False,
         marker=dict(
-            color="#22c55e",
-            size=6,
-            opacity=0.95,
-            line=dict(width=0),
+            color="#5cc16a",
+            size=5,
+            opacity=0.96,
+            line=dict(width=0.7, color="white"),
         ),
         text=np.array(hover)[highlight_mask].tolist(),
         hovertemplate="%{text}<extra></extra>",
     )
 
-    fig = go.Figure(data=[background_trace, highlight_trace])
+    legend_global = go.Scatter(
+        x=[None],
+        y=[None],
+        mode="lines",
+        name="Moyenne globale",
+        line=dict(color="#6b7280", width=2, dash="dash"),
+        showlegend=True,
+        hoverinfo="skip",
+    )
+
+    legend_filtered = go.Scatter(
+        x=[None],
+        y=[None],
+        mode="lines",
+        name="Moyenne filtrée",
+        line=dict(color="#1f2937", width=3),
+        showlegend=True,
+        hoverinfo="skip",
+    )
+
+    fig = go.Figure(data=[background_trace, highlight_trace, legend_global, legend_filtered])
+
+    y_min = float(np.min(y_positions)) - 8
+    y_max = float(np.max(y_positions)) + 8
+
+    shapes = [
+        dict(
+            type="line",
+            x0=mean_all,
+            x1=mean_all,
+            y0=y_min,
+            y1=y_max,
+            line=dict(color="#6b7280", width=2, dash="dash"),
+            layer="below",
+        )
+    ]
+
+    if mean_filtered is not None:
+        shapes.append(
+            dict(
+                type="line",
+                x0=mean_filtered,
+                x1=mean_filtered,
+                y0=y_min,
+                y1=y_max,
+                line=dict(color="#1f2937", width=3),
+                layer="below",
+            )
+        )
 
     fig.update_layout(
         paper_bgcolor="white",
         plot_bgcolor="white",
         autosize=False,
-        height=620,
-        margin=dict(l=50, r=30, t=55, b=55),
+        height=540,
+        margin=dict(l=50, r=20, t=45, b=45),
         title=dict(
             text="Distribution des scores à l'examen",
             font=dict(size=18, color="#e07b00"),
+            x=0.0,
+            xanchor="left",
         ),
         xaxis=dict(
             title=dict(text="Score à l'examen"),
@@ -229,6 +331,7 @@ def create_figure(df: pd.DataFrame, selected_filters: dict | None = None):
             visible=False,
             zeroline=False,
             showgrid=False,
+            range=[y_min, y_max],
         ),
         hovermode="closest",
         hoverlabel=dict(
@@ -236,7 +339,18 @@ def create_figure(df: pd.DataFrame, selected_filters: dict | None = None):
             bordercolor="#e2e5ec",
             font=dict(size=12, color="#1a1d26"),
         ),
-        dragmode=False
+        dragmode=False,
+        shapes=shapes,
+        legend=dict(
+            x=0.98,
+            y=0.97,
+            xanchor="right",
+            yanchor="top",
+            bgcolor="rgba(255,255,255,0.92)",
+            bordercolor="#d1d5db",
+            borderwidth=1,
+            font=dict(size=11, color="#1f2937"),
+        ),
     )
 
     return fig
@@ -248,5 +362,5 @@ def make_initial_graph(df: pd.DataFrame):
         figure=create_figure(df, {}),
         config={"displayModeBar": False},
         className="beeswarm-graph",
-        style={"height": "620px"},
+        style={"height": "540px"},
     )

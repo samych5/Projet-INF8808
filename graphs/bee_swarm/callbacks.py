@@ -1,76 +1,140 @@
-from dash import Input, Output, ALL, State, ctx, no_update
+import math
 
-from .graph import create_figure, FILTERS, FILTER_KEYS
-from .graph_controller import FILTERS_PER_PAGE
-from .variables import ID
+from dash import Input, Output, State, ctx, no_update
+from dash.dependencies import ALL
+
+from .graph import FILTERS, FILTER_KEYS, create_figure
+from .template import make_active_filters_summary, make_filters_page
+from .variables import FILTERS_PER_PAGE, ID
 
 
-def register_callbacks(app, df, init_step: int):
+def _normalize_selected_filters(selected_filters: dict | None) -> dict:
+    if not selected_filters:
+        return {}
+
+    clean_filters: dict = {}
+
+    for filter_key, filter_value in selected_filters.items():
+        if filter_key not in FILTERS:
+            continue
+
+        filter_meta = FILTERS[filter_key]
+
+        if filter_meta["type"] == "categorical":
+            if filter_value:
+                clean_filters[filter_key] = list(filter_value)
+        else:
+            if filter_value and len(filter_value) == 2:
+                clean_filters[filter_key] = [filter_value[0], filter_value[1]]
+
+    return clean_filters
+
+
+def register_callbacks(app, df, init_step = 0):
+    total_pages = math.ceil(len(FILTER_KEYS) / FILTERS_PER_PAGE)
 
     @app.callback(
-        Output(ID["filters-page-store"], "data"),
-        Input(ID["filters-prev-btn"], "n_clicks"),
-        Input(ID["filters-next-btn"], "n_clicks"),
-        State(ID["filters-page-store"], "data"),
+        Output(ID["filter-page-store"], "data"),
+        Input(ID["prev-page-btn"], "n_clicks"),
+        Input(ID["next-page-btn"], "n_clicks"),
+        State(ID["filter-page-store"], "data"),
         prevent_initial_call=True,
     )
-    def update_filters_page(prev_clicks, next_clicks, current_page):
-        current_page = current_page or 0
-        n_pages = (len(FILTER_KEYS) + FILTERS_PER_PAGE - 1) // FILTERS_PER_PAGE
+    def update_filter_page(_, __, current_page):
+        triggered = ctx.triggered_id
+        current_page = int(current_page or 0)
 
-        triggered_id = ctx.triggered_id
-
-        if triggered_id == ID["filters-prev-btn"]:
+        if triggered == ID["prev-page-btn"]:
             return max(0, current_page - 1)
 
-        if triggered_id == ID["filters-next-btn"]:
-            return min(n_pages - 1, current_page + 1)
+        if triggered == ID["next-page-btn"]:
+            return min(total_pages - 1, current_page + 1)
 
-        return no_update
-
-    @app.callback(
-        Output(ID["filters-page-label"], "children"),
-        Input(ID["filters-page-store"], "data"),
-    )
-    def update_page_label(current_page):
-        current_page = current_page or 0
-        n_pages = (len(FILTER_KEYS) + FILTERS_PER_PAGE - 1) // FILTERS_PER_PAGE
-        return f"Page {current_page + 1} / {n_pages}"
+        return current_page
 
     @app.callback(
-        Output({"type": "beeswarm-filter-block", "column": ALL}, "style"),
-        Input(ID["filters-page-store"], "data"),
+        Output(ID["filters-container"], "children"),
+        Output(ID["page-label"], "children"),
+        Input(ID["filter-page-store"], "data"),
+        Input(ID["selected-filters-store"], "data"),
     )
-    def update_filter_blocks_visibility(current_page):
-        current_page = current_page or 0
+    def render_filters_container(page_index, selected_filters):
+        page_index = int(page_index or 0)
+        selected_filters = _normalize_selected_filters(selected_filters)
+        return (
+            make_filters_page(df, page_index, selected_filters),
+            f"Filtres {page_index + 1} / {total_pages}",
+        )
 
-        start = current_page * FILTERS_PER_PAGE
-        end = start + FILTERS_PER_PAGE
-        visible_keys = set(FILTER_KEYS[start:end])
+    @app.callback(
+        Output(ID["selected-filters-store"], "data"),
+        Input({"type": "beeswarm-categorical-filter", "index": ALL}, "value"),
+        Input({"type": "beeswarm-numeric-filter", "index": ALL}, "value"),
+        Input({"type": "beeswarm-reset-single", "index": ALL}, "n_clicks"),
+        Input({"type": "beeswarm-remove-chip", "index": ALL}, "n_clicks"),
+        Input(ID["reset-all-btn"], "n_clicks"),
+        State({"type": "beeswarm-categorical-filter", "index": ALL}, "id"),
+        State({"type": "beeswarm-numeric-filter", "index": ALL}, "id"),
+        State(ID["selected-filters-store"], "data"),
+        prevent_initial_call=True,
+    )
+    def update_selected_filters(
+        categorical_values,
+        numeric_values,
+        _reset_single_clicks,
+        _remove_chip_clicks,
+        reset_all_clicks,
+        categorical_ids,
+        numeric_ids,
+        selected_filters,
+    ):
+        _ = reset_all_clicks
+        selected_filters = _normalize_selected_filters(selected_filters)
+        triggered = ctx.triggered_id
 
-        styles = []
-        for column_name in FILTER_KEYS:
-            if column_name in visible_keys:
-                styles.append({"display": "block"})
-            else:
-                styles.append({"display": "none"})
-        return styles
+        if triggered == ID["reset-all-btn"]:
+            return {}
+
+        if isinstance(triggered, dict) and triggered.get("type") in {"beeswarm-reset-single", "beeswarm-remove-chip"}:
+            filter_key = triggered["index"]
+            if filter_key in selected_filters:
+                selected_filters.pop(filter_key)
+            return selected_filters
+
+        if isinstance(triggered, dict) and triggered.get("type") == "beeswarm-categorical-filter":
+            filter_key = triggered["index"]
+            for comp_id, value in zip(categorical_ids, categorical_values):
+                if comp_id["index"] == filter_key:
+                    if value:
+                        selected_filters[filter_key] = value
+                    elif filter_key in selected_filters:
+                        selected_filters.pop(filter_key)
+                    break
+            return selected_filters
+
+        if isinstance(triggered, dict) and triggered.get("type") == "beeswarm-numeric-filter":
+            filter_key = triggered["index"]
+            for comp_id, value in zip(numeric_ids, numeric_values):
+                if comp_id["index"] == filter_key:
+                    min_value = int(df[filter_key].min())
+                    max_value = int(df[filter_key].max())
+
+                    if value and value != [min_value, max_value]:
+                        selected_filters[filter_key] = value
+                    elif filter_key in selected_filters:
+                        selected_filters.pop(filter_key)
+                    break
+            return selected_filters
+
+        return selected_filters
 
     @app.callback(
         Output(ID["graph"], "figure"),
-        Input({"type": "beeswarm-filter-categorical", "column": ALL}, "value"),
-        Input({"type": "beeswarm-filter-numeric", "column": ALL}, "value"),
+        Output(ID["active-filters-bar"], "children"),
+        Input(ID["selected-filters-store"], "data"),
     )
-    def update_graph(all_categorical_values, all_numeric_values):
-        selected_filters = {}
-
-        categorical_keys = [key for key in FILTER_KEYS if FILTERS[key]["type"] == "categorical"]
-        numeric_keys = [key for key in FILTER_KEYS if FILTERS[key]["type"] == "numeric"]
-
-        for i, column_name in enumerate(categorical_keys):
-            selected_filters[column_name] = all_categorical_values[i] if i < len(all_categorical_values) else []
-
-        for i, column_name in enumerate(numeric_keys):
-            selected_filters[column_name] = all_numeric_values[i] if i < len(all_numeric_values) else []
-
-        return create_figure(df, selected_filters)
+    def update_graph_and_summary(selected_filters):
+        selected_filters = _normalize_selected_filters(selected_filters)
+        figure = create_figure(df, selected_filters)
+        summary = make_active_filters_summary(selected_filters)
+        return figure, summary
