@@ -73,6 +73,8 @@ def create_figure(
             bgcolor="rgba(255,255,255,0.9)",
             bordercolor="#d8d0c0",
             borderwidth=1,
+            itemclick=False if not config.enable_interactions else "toggle",
+            itemdoubleclick=False if not config.enable_interactions else "toggleothers",
         ),
         margin=dict(l=60, r=20, t=20, b=60),
         hovermode="closest",

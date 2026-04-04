@@ -33,8 +33,13 @@ def register_callbacks(app, df, init_step : int):
         if active_step is None or int(active_step) != last_step:
             return no_update
 
-        config = GraphConfig(col_x=ColX(col_x), col_symbol=SymbolVar(col_symbol))
-        figure = create_figure(df, config)
+        local_step = last_step - init_step
+
+        step_config = get_step_graph_config(local_step)
+        step_config.col_x = col_x
+        step_config.col_symbol = col_symbol
+
+        figure = create_figure(df, step_config)
         return figure
 
     @app.callback(
