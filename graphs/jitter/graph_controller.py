@@ -15,6 +15,7 @@ def make_controller():
                 options=DROPDOWN_OPTIONS,
                 value=ColX.TUTORING_SESSIONS.value,
                 clearable=False,
+                searchable=False,
                 className="graphs-controller-element",
             ),
         ],

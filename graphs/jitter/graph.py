@@ -17,7 +17,11 @@ def make_initial_graph(
     return dcc.Graph(
         id=ID["graph"],
         figure=create_figure(df, get_step_graph_config(0)),
-        config={"displayModeBar": False},
+        config={
+            "displayModeBar": False,
+            "scrollZoom": False,
+            "doubleClick": False,
+        },
         className="graph",
     )
 
@@ -75,6 +79,8 @@ def create_figure(
         xaxis=dict(
             tickvals=sorted(df[col_x].dropna().unique().tolist()),
         ),
+        transition=dict(duration=0),
+        dragmode=False
     )
 
     fig.update_xaxes(
@@ -95,9 +101,5 @@ def create_figure(
 
     for layer in config.layers:
         add_layer_to_figure(fig, layer)
-
-    fig.update_layout(
-        transition=dict(duration=0)
-    )
 
     return fig

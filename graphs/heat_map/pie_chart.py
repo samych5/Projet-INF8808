@@ -39,6 +39,7 @@ def create_pie_chart():
         plot_bgcolor="white",
         showlegend=False,
         height=200,
+        dragmode=False
     )
 
     return fig

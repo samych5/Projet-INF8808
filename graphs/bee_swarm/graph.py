@@ -236,6 +236,7 @@ def create_figure(df: pd.DataFrame, selected_filters: dict | None = None):
             bordercolor="#e2e5ec",
             font=dict(size=12, color="#1a1d26"),
         ),
+        dragmode=False
     )
 
     return fig

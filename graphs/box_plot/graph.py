@@ -48,7 +48,11 @@ def make_initial_graph(df: pd.DataFrame):
     return dcc.Graph(
         id=ID["graph"],
         figure=create_figure(df, get_step_graph_config(0)),
-        config={"displayModeBar": False},
+        config={
+            "displayModeBar": False,
+            "scrollZoom": False,
+            "doubleClick": False,
+        },
         className="graph",
     )
 
@@ -254,6 +258,7 @@ def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
         ),
         margin=dict(l=60, r=180, t=80, b=90),
         transition=dict(duration=0),
+        dragmode=False
     )
 
     fig.update_xaxes(

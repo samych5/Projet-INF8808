@@ -21,6 +21,7 @@ def make_controller():
                 options=DROPDOWN_OPTIONS,
                 value=ColX.HOURS_STUDIED.value,
                 clearable=False,
+                searchable=False,
                 className="graphs-controller-element",
             ),
             dcc.Dropdown(
@@ -28,6 +29,7 @@ def make_controller():
                 options=SYMBOL_VAR_OPTIONS,
                 value=SymbolVar.EXTRACURRICULAR_ACTIVITIES.value,
                 clearable=False,
+                searchable=False,
                 className="graphs-controller-element",
             ),
         ],

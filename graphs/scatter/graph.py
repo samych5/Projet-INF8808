@@ -14,7 +14,11 @@ def make_initial_graph(
     return dcc.Graph(
         id=ID["graph"],
         figure=create_figure(df, get_step_graph_config(0)),
-        config={"displayModeBar": False},
+        config={
+            "displayModeBar": False,
+            "scrollZoom": False,
+            "doubleClick": False,
+        },
         className="graph",
     )
 
@@ -89,13 +93,14 @@ def create_figure(
             borderwidth=1,
         ),
         margin=dict(l=60, r=20, t=20, b=60),
-        transition=dict(duration=350, easing="cubic-in-out"),
         hovermode="closest",
         xaxis=dict(
             tickvals=[0, 5, 10, 15, 20, 25, 30, 35, 40, 44]
             if config.col_x ==  ColX.HOURS_STUDIED.value
             else [60, 65, 70, 75, 80, 85, 90, 95, 100],
         ),
+        transition=dict(duration=0),
+        dragmode=False
     )
 
     fig.update_xaxes(
@@ -116,10 +121,6 @@ def create_figure(
 
     for layer in config.layers:
         add_layer_to_figure(fig, layer)
-
-    fig.update_layout(
-        transition=dict(duration=0)
-    )
 
     return fig
 
