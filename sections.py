@@ -18,6 +18,9 @@ from graphs.bar_chart.template import make_section as make_bar_chart_steps_secti
 from graphs.heat_map.callbacks import register_callbacks as register_heat_map_callbacks
 from graphs.heat_map.template import make_section as make_heat_map_steps_section, get_steps_number as heat_map_steps
 
+from graphs.bee_swarm.callbacks import register_callbacks as register_bee_swarm_callbacks
+from graphs.bee_swarm.template import make_section as make_bee_swarm_steps_section, get_steps_number as bee_swarm_steps
+
 class SectionParameters:
     def __init__(
         self,
@@ -35,6 +38,7 @@ SECTIONS = [
     SectionParameters(make_box_plot_steps_section, box_plot_steps, register_box_plot_callbacks),
     SectionParameters(make_heat_map_steps_section, heat_map_steps, register_heat_map_callbacks),
     SectionParameters(make_bar_chart_steps_section, bar_chart_steps, register_bar_chart_callbacks),
+    SectionParameters(make_bee_swarm_steps_section, bee_swarm_steps, register_bee_swarm_callbacks),
 ]
 
 DEFAULT_STEP = 1
