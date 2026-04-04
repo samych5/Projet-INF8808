@@ -100,6 +100,6 @@ def create_figure(
     )
 
     for layer in config.layers:
-        add_layer_to_figure(fig, layer)
+        layer.apply(fig, df, config)
 
     return fig
