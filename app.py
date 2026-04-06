@@ -1,29 +1,22 @@
-from dash import Input, Output
 from server import app
 from preprocess import get_data
 from template import get_layout
-from scatter import create_figure as scatter_figure
-from jitter import create_figure as jitter_figure
+
+from sections import SECTIONS, DEFAULT_STEP
+
+server = app.server
 
 df = get_data()
-app.layout = get_layout()
+app.layout = get_layout(df)
 
+def register_callbacks(df):
+    init_step = DEFAULT_STEP
 
-@app.callback(
-    Output("graph-scatter",          "figure"),
-    Input("dropdown-scatter-x",      "value"),
-    Input("dropdown-scatter-symbol", "value"),
-)
-def update_scatter(col_x, col_symbol):
-    return scatter_figure(df, col_x, col_symbol)
+    for section in SECTIONS:
+        section.callback(app, df, init_step)
+        init_step += section.get_steps_number()
 
-
-@app.callback(
-    Output("graph-jitter",      "figure"),
-    Input("dropdown-jitter-x",  "value"),
-)
-def update_jitter(col_x):
-    return jitter_figure(df, col_x)
+register_callbacks(df)
 
 if __name__ == "__main__":
     app.run(debug=True)
