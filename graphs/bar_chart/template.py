@@ -1,12 +1,22 @@
-from dash import html, dcc
+import os
+import base64
+from dash import html
 from pandas import DataFrame
 
 from .steps_config import STEPS_CONFIG
-from .graph import make_initial_graph
 from .variables import *
+
 
 def get_steps_number():
     return len(STEPS_CONFIG)
+
+
+def _load_img(graph_name: str, index: int) -> str:
+    path = os.path.join("assets", "images", f"{graph_name}-{index}.png")
+    with open(path, "rb") as f:
+        encoded = base64.b64encode(f.read()).decode("utf-8")
+    return f"data:image/png;base64,{encoded}"
+
 
 def make_text_steps(start_index: int = 1):
     return [
@@ -26,7 +36,22 @@ def make_text_steps(start_index: int = 1):
         for step_index, step_config in enumerate(STEPS_CONFIG, start=start_index)
     ]
 
+
 def make_section(df: DataFrame, start_index: int = 1):
+    graph_panels = [
+        html.Div(
+            id=f"barchart-img-{start_index + i}",
+            style={"display": "none"},
+            children=[
+                html.Img(
+                    src=_load_img("barchart", i),
+                    style={"width": "100%", "height": "100%", "objectFit": "contain"},
+                )
+            ],
+        )
+        for i in range(len(STEPS_CONFIG))
+    ]
+
     return html.Section(
         id="section-bar-chart",
         className="story-section bar-chart-section",
@@ -35,7 +60,6 @@ def make_section(df: DataFrame, start_index: int = 1):
                 className="story-text-column",
                 children=make_text_steps(start_index),
             ),
-
             html.Div(
                 className="story-graph-column",
                 children=[
@@ -47,9 +71,7 @@ def make_section(df: DataFrame, start_index: int = 1):
                                 children=[
                                     html.Div(
                                         className="graph-panel-inner",
-                                        children=[
-                                            make_initial_graph(df),
-                                        ],
+                                        children=graph_panels,
                                     )
                                 ],
                             )

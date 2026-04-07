@@ -1,15 +1,24 @@
-from dash import html, dcc
+import os
+import base64
+from dash import html
 from pandas import DataFrame
 
-from .steps_config import STEPS_CONFIG, get_step_graph_config, GraphConfig
-from .graph_controller import make_controller
-from .graph import create_figure, make_initial_graph
+from .steps_config import STEPS_CONFIG
 from .variables import *
+
 
 def get_steps_number():
     return len(STEPS_CONFIG)
 
-def make_text_steps(start_index : int = 1):
+
+def _load_img(graph_name: str, index: int) -> str:
+    path = os.path.join("assets", "images", f"{graph_name}-{index}.png")
+    with open(path, "rb") as f:
+        encoded = base64.b64encode(f.read()).decode("utf-8")
+    return f"data:image/png;base64,{encoded}"
+
+
+def make_text_steps(start_index: int = 1):
     return [
         html.Div(
             className="story-step jitter-step",
@@ -27,34 +36,30 @@ def make_text_steps(start_index : int = 1):
         for step_index, step_config in enumerate(STEPS_CONFIG, start=start_index)
     ]
 
-def precompute_story_figures(df, init_step: int, n_steps: int):
-    store = {}
 
-    for local_step in range(n_steps - 1):
-        config : GraphConfig = get_step_graph_config(local_step)
-        fig = create_figure(df, config)
-        global_step = str(init_step + local_step)
-        store[global_step] = {
-            "__default__": fig.to_plotly_json()
-        }
-
-    return store
-
-def make_section(df: DataFrame, start_index : int = 1):
-
-    precomputed_figures = precompute_story_figures(df, start_index, get_steps_number())
+def make_section(df: DataFrame, start_index: int = 1):
+    graph_panels = [
+        html.Div(
+            id=f"jitter-img-{start_index + i}",
+            style={"display": "none"},
+            children=[
+                html.Img(
+                    src=_load_img("jitter", i),
+                    style={"width": "100%", "height": "100%", "objectFit": "contain"},
+                )
+            ],
+        )
+        for i in range(len(STEPS_CONFIG))
+    ]
 
     return html.Section(
         id="section-jitter",
         className="story-section jitter-section",
         children=[
-            dcc.Store(id=ID["figures-store"],data=precomputed_figures),
-
             html.Div(
                 className="story-text-column",
                 children=make_text_steps(start_index),
             ),
-
             html.Div(
                 className="story-graph-column",
                 children=[
@@ -66,10 +71,7 @@ def make_section(df: DataFrame, start_index : int = 1):
                                 children=[
                                     html.Div(
                                         className="graph-panel-inner",
-                                        children=[
-                                            make_controller(),
-                                            make_initial_graph(df),
-                                        ],
+                                        children=graph_panels,
                                     )
                                 ],
                             )
