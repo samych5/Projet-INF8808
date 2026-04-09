@@ -23,10 +23,9 @@ class StepParameters:
         self.title = title
 
 STEPS_CONFIG : list[StepParameters] = [
-    StepParameters("text 1 test", GraphConfig(col_x=ColX.TUTORING_SESSIONS), title="Jitter"),
-    StepParameters("text 2", GraphConfig(col_x=ColX.TUTORING_SESSIONS, layers=[LinearTrendLayer()]), title="Jitter"),
-    StepParameters("text 3", GraphConfig(col_x=ColX.SLEEP_HOURS, visible_gender=[Genres.MEN], layers=[LinearTrendLayer()]), title="Jitter"),
-    StepParameters(text="text 4", graph_config=GraphConfig(enable_interactions=True), title="Jitter Derniere etape")
+    StepParameters("Un soutien utile, mais dont l'impact positif plafonne rapidement malgré l'investissement.", GraphConfig(col_x=ColX.TUTORING_SESSIONS), title="Le tutorat a un petit impact."),
+    StepParameters("Un facteur vital pour l'équilibre, mais sans lien statistique avec la performance académique.", GraphConfig(col_x=ColX.TUTORING_SESSIONS, layers=[LinearTrendLayer()]), title="Le sommeil n'a pas d'impact."),
+    StepParameters("Essentiel pour la santé, mais sans incidence mesurable sur la moyenne finale.", GraphConfig(col_x=ColX.PHYSICAL_ACTIVITY, layers=[LinearTrendLayer()]), title="L'activité physique n'a pas d'impact. "),
 ]
 
 DEFAULT_CONFIG : StepParameters = StepParameters("default_text", GraphConfig(), title="default_title")
