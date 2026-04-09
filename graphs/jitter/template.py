@@ -18,6 +18,14 @@ def _load_img(graph_name: str, index: int) -> str:
     return f"data:image/png;base64,{encoded}"
 
 
+JITTER_LABELS = [
+    ["Séances de tutorat"],
+    ["Séances de tutorat"],
+    ["Heures de sommeil par nuit"],
+    ["Séances de tutorat"],
+]
+
+
 def make_text_steps(start_index: int = 1):
     return [
         html.Div(
@@ -38,19 +46,28 @@ def make_text_steps(start_index: int = 1):
 
 
 def make_section(df: DataFrame, start_index: int = 1):
-    graph_panels = [
-        html.Div(
-            id=f"jitter-img-{start_index + i}",
-            style={"display": "none"},
-            children=[
-                html.Img(
-                    src=_load_img("jitter", i),
-                    style={"width": "100%", "height": "100%", "objectFit": "contain"},
-                )
-            ],
+    graph_panels = []
+    for i in range(len(STEPS_CONFIG)):
+        labels = JITTER_LABELS[i] if i < len(JITTER_LABELS) else []
+        graph_panels.append(
+            html.Div(
+                id=f"jitter-img-{start_index + i}",
+                style={"display": "none"},
+                children=[
+                    html.Div(
+                        className="graph-labels",
+                        children=[
+                            html.Div(label, className="graph-label-pill")
+                            for label in labels
+                        ],
+                    ),
+                    html.Img(
+                        src=_load_img("jitter", i),
+                        style={"width": "100%", "height": "100%", "objectFit": "contain"},
+                    ),
+                ],
+            )
         )
-        for i in range(len(STEPS_CONFIG))
-    ]
 
     return html.Section(
         id="section-jitter",

@@ -1,3 +1,4 @@
+from dash import html
 from .variables import *
 
 class GraphConfig:
@@ -38,8 +39,9 @@ class GraphConfig:
             for factor, is_bright in factor_brightness.items():
                 self.factor_brightness[factor.value] = is_bright
 
+
 class StepParameters:
-    def __init__(self, text: str, graph_config: GraphConfig, title: str):
+    def __init__(self, text, graph_config: GraphConfig, title: str):
         self.text = text
         self.graph_config = graph_config
         self.title = title
@@ -47,7 +49,13 @@ class StepParameters:
 
 STEPS_CONFIG: list[StepParameters] = [
     StepParameters(
-        text="Vue d’ensemble des facteurs environnementaux influençant la note d’examen.",
+        title="Comment interpréter ce graphique ?",
+        text=html.Ul([
+            html.Li("La boîte représente la majorité des résultats. Plus elle est haute, plus les valeurs sont élevées."),
+            html.Li("La ligne au centre correspond à la valeur typique (la médiane). Elle indique où se situe le milieu des données."),
+            html.Li("Les barres (moustaches) montrent l'étendue des résultats, du plus bas au plus élevé."),
+            html.Li("Les points autour représentent des résultats inhabituels, très différents de la majorité."),
+        ]),
         graph_config=GraphConfig(
             factor_brightness={
                 Factors.PARENTAL_EDUCATION_LEVEL: True,
@@ -55,74 +63,75 @@ STEPS_CONFIG: list[StepParameters] = [
                 Factors.PARENTAL_INVOLVEMENT: True,
                 Factors.ACCESS_TO_RESOURCES: True,
                 Factors.TEACHER_QUALITY: True,
-                Factors.PEER_INFLUENCE: False,
-            },
-        ),
-        title="Synthèse environnementale",
-    ),
-    StepParameters(
-        text="Vue d’ensemble des facteurs environnementaux influençant la note d’examen.",
-        graph_config=GraphConfig(
-            show_legend=True,
-            factor_brightness={
-                Factors.PARENTAL_EDUCATION_LEVEL: True,
-                Factors.FAMILY_INCOME: True,
-                Factors.PARENTAL_INVOLVEMENT: True,
-                Factors.ACCESS_TO_RESOURCES: False,
-                Factors.TEACHER_QUALITY: False,
                 Factors.PEER_INFLUENCE: True,
             },
         ),
-        title="Synthèse environnementale",
     ),
     StepParameters(
-        text="On commence par observer l’effet du milieu familial à travers l’éducation des parents et le revenu familial.",
+        title="",
+        text="Nous allons maintenant nous intéresser aux facteurs environnementaux qui peuvent influencer la réussite scolaire.",
+        graph_config=GraphConfig(
+            factor_brightness={
+                Factors.PARENTAL_EDUCATION_LEVEL: False,
+                Factors.FAMILY_INCOME: False,
+                Factors.PARENTAL_INVOLVEMENT: False,
+                Factors.ACCESS_TO_RESOURCES: False,
+                Factors.TEACHER_QUALITY: False,
+                Factors.PEER_INFLUENCE: False,
+            },
+        ),
+    ),
+    StepParameters(
+        title="Milieu familial",
+        text=html.Ul([
+            html.Li("Les élèves dont les parents ont un niveau d'éducation plus élevé obtiennent légèrement de meilleures notes."),
+            html.Li("On voit une tendance similaire pour le revenu familial : un revenu plus élevé est associé à de meilleures performances."),
+            html.Li("La différence existe, mais elle reste modérée : les groupes se chevauchent beaucoup."),
+        ]),
         graph_config=GraphConfig(
             visible_factors=[
                 Factors.PARENTAL_EDUCATION_LEVEL,
                 Factors.FAMILY_INCOME,
-            ],
-            visible_levels=[Levels.LOW, Levels.MEDIUM, Levels.HIGH],
-            show_legend=True,
-            factor_brightness={
-                Factors.PARENTAL_EDUCATION_LEVEL: True,
-                Factors.FAMILY_INCOME: True,
-            },
-        ),
-        title="Milieu familial",
-    ),
-    StepParameters(
-        text="Ici, on se concentre sur l’implication parentale et l’accès aux ressources.",
-        graph_config=GraphConfig(
-            visible_factors=[
                 Factors.PARENTAL_INVOLVEMENT,
                 Factors.ACCESS_TO_RESOURCES,
-            ],
-            visible_levels=[Levels.LOW, Levels.MEDIUM, Levels.HIGH],
-            show_legend=True,
-            factor_brightness={
-                Factors.PARENTAL_INVOLVEMENT: True,
-                Factors.ACCESS_TO_RESOURCES: False,
-            },
-        ),
-        title="Encadrement scolaire",
-    ),
-    StepParameters(
-        text="Enfin, on termine avec la qualité des enseignants et l’influence des pairs.",
-        graph_config=GraphConfig(
-            visible_factors=[
                 Factors.TEACHER_QUALITY,
                 Factors.PEER_INFLUENCE,
             ],
-            visible_levels=[Levels.LOW, Levels.MEDIUM, Levels.HIGH],
-            show_legend=True,
-            enable_interactions=True,
             factor_brightness={
+                Factors.PARENTAL_EDUCATION_LEVEL: True,
+                Factors.FAMILY_INCOME: True,
+                Factors.PARENTAL_INVOLVEMENT: False,
+                Factors.ACCESS_TO_RESOURCES: False,
+                Factors.TEACHER_QUALITY: False,
+                Factors.PEER_INFLUENCE: False,
+            },
+        ),
+    ),
+    StepParameters(
+        title="Encadrement scolaire",
+        text=html.Ul([
+            html.Li("Les élèves dont les parents s'impliquent, qui ont un meilleur accès aux ressources et dont la qualité des enseignants est meilleure obtiennent légèrement de meilleures notes."),
+            html.Li("La différence existe, mais elle reste modérée : les groupes se chevauchent beaucoup."),
+            html.Li("L'influence des pairs a peu d'impact."),
+        ]),
+        graph_config=GraphConfig(
+            visible_factors=[
+                Factors.PARENTAL_EDUCATION_LEVEL,
+                Factors.FAMILY_INCOME,
+                Factors.PARENTAL_INVOLVEMENT,
+                Factors.ACCESS_TO_RESOURCES,
+                Factors.TEACHER_QUALITY,
+                Factors.PEER_INFLUENCE,
+            ],
+            factor_brightness={
+                Factors.PARENTAL_EDUCATION_LEVEL: False,
+                Factors.FAMILY_INCOME: False,
+                Factors.PARENTAL_INVOLVEMENT: True,
+                Factors.ACCESS_TO_RESOURCES: True,
                 Factors.TEACHER_QUALITY: True,
                 Factors.PEER_INFLUENCE: True,
             },
         ),
-        title="Dernière étape",
     ),
 ]
 

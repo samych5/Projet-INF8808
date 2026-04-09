@@ -159,6 +159,11 @@ def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
         factor: i for i, factor in enumerate(visible_factor_order)
     }
 
+    first_bright_factor = next(
+        (f for f in visible_factor_order if config.factor_brightness.get(f, True)),
+        visible_factor_order[0]
+    )
+
     for factor in visible_factor_order:
         is_bright = config.factor_brightness.get(factor, True)
         factor_df = df_plot[df_plot["Facteur"] == factor]
@@ -190,7 +195,7 @@ def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
                     y=sub["Exam_Score"],
                     name=level,
                     legendgroup=level,
-                    showlegend=(factor == visible_factor_order[0] and config.show_legend),
+                    showlegend=(factor == first_bright_factor and config.show_legend),
                     width=0.22,
                     marker=dict(
                         color=point_color,
