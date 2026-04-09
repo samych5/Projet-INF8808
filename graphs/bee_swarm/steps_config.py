@@ -1,5 +1,5 @@
 class GraphConfig:
-    def __init__(self, title: str = "Essaim d’abeille interactif"):
+    def __init__(self, title: str = "Essaim d'abeille interactif"):
         self.title = title
 
 
@@ -12,11 +12,13 @@ class StepParameters:
 
 STEPS_CONFIG = [
     StepParameters(
-        title="Essaim d’abeille interactif",
+        title="À vous de jouer : Devenez l'analyste !",
         text=(
-            "Ci-dessous, vous trouverez un graphique interactif dans lequel chaque point représente un élève. "
-            "Les filtres permettent de mettre en lumière les élèves correspondant à certaines caractéristiques, "
-            "afin de situer plus facilement votre enfant par rapport à l’ensemble du jeu de données."
+            "Les statistiques nous donnent une tendance, mais la réalité est souvent plus nuancée. "
+            "C'est maintenant à votre tour d'explorer ces données ! "
+            "Utilisez les filtres à votre disposition sur la droite pour créer vos propres scénarios : "
+            "Modifiez, comparez et observez en temps réel comment les élèves qui répondent à ces critères performent. "
+            "C'est l'occasion de tester vos propres hypothèses et de voir quels facteurs font pencher la balance !"
         ),
         graph_config=GraphConfig(),
     ),

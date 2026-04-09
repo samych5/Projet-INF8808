@@ -46,8 +46,9 @@ class GraphConfig:
             for factor, is_bright in factor_brightness.items():
                 self.factor_brightness[factor.column] = is_bright
 
+
 class StepParameters:
-    def __init__(self, text: str, graph_config: GraphConfig, title: str):
+    def __init__(self, text, graph_config: GraphConfig, title: str):
         self.text = text
         self.graph_config = graph_config
         self.title = title
@@ -55,7 +56,12 @@ class StepParameters:
 
 STEPS_CONFIG: list[StepParameters] = [
     StepParameters(
-        text="Vue d’ensemble des facteurs influençant la performance scolaire, classés selon leur corrélation avec la note finale.",
+        title="Qu'est-ce qui fait vraiment la réussite d'un élève ?",
+        text=(
+            "Pour répondre à cette question, nous avons analysé une multitude de facteurs — du cadre de vie à l'effort personnel, "
+            "en passant par l'environnement familial. Ce graphique classe ces variables selon leur degré de corrélation avec la note finale : "
+            "plus la barre est longue et bleue, plus le facteur a un impact direct sur la performance."
+        ),
         graph_config=GraphConfig(
             show_legend=True,
             show_color_scale=True,
@@ -70,10 +76,14 @@ STEPS_CONFIG: list[StepParameters] = [
                 Factors.EXTRACURRICULAR_ACTIVITIES: False,
             },
         ),
-        title="Prévisualisation",
     ),
     StepParameters(
-        text="On commence par les facteurs liés à l’élève, comme l’assiduité, les heures d’étude, la motivation ou encore les activités parascolaires.",
+        title="Facteurs liés à l'élève",
+        text=(
+            "Les données sont sans appel : la présence en cours et les heures étudiées sont les deux leviers les plus puissants pour réussir. "
+            "Loin devant le talent inné ou le genre, c'est l'investissement direct de l'élève qui dicte la note finale. "
+            "À noter : les activités parascolaires et le sommeil ont un impact quasi nul sur la note, prouvant qu'on peut avoir une vie équilibrée sans sacrifier ses résultats."
+        ),
         graph_config=GraphConfig(
             visible_factors=[
                 Factors.ATTENDANCE,
@@ -98,10 +108,14 @@ STEPS_CONFIG: list[StepParameters] = [
                 Factors.EXTRACURRICULAR_ACTIVITIES: False,
             },
         ),
-        title="Facteurs liés à l’élève",
     ),
     StepParameters(
-        text="On observe ensuite les facteurs familiaux, comme l’implication parentale, le revenu et le niveau d’éducation des parents.",
+        title="Facteurs familiaux",
+        text=(
+            "Bien que le revenu familial joue un rôle, c'est l'implication des parents qui a l'impact le plus positif dans cette catégorie. "
+            "Un parent qui suit le parcours de son enfant aide plus la réussite scolaire que le simple niveau d'études des parents ou le confort financier. "
+            "L'accompagnement humain reste une ressource de premier plan."
+        ),
         graph_config=GraphConfig(
             visible_factors=[
                 Factors.PARENTAL_INVOLVEMENT,
@@ -116,10 +130,14 @@ STEPS_CONFIG: list[StepParameters] = [
                 Factors.PARENTAL_EDUCATION_LEVEL: True,
             },
         ),
-        title="Facteurs familiaux",
     ),
     StepParameters(
-        text="Enfin, on regarde les facteurs liés à l’environnement scolaire, comme l’accès aux ressources, la qualité des enseignants, le type d’école ou l’influence des pairs.",
+        title="Facteurs scolaires",
+        text=(
+            "L'analyse montre que l'accès aux ressources est bien plus déterminant que le prestige de l'école (public ou privé), "
+            "dont la corrélation est presque inexistante. En somme, peu importe l'étiquette de l'école, "
+            "c'est la qualité des outils mis à disposition de l'élève qui fait la différence."
+        ),
         graph_config=GraphConfig(
             visible_factors=[
                 Factors.ACCESS_TO_RESOURCES,
@@ -140,16 +158,20 @@ STEPS_CONFIG: list[StepParameters] = [
                 Factors.SCHOOL_TYPE: False,
             },
         ),
-        title="Facteurs scolaires",
     ),
     StepParameters(
-        text="Cette dernière vue redonne une synthèse complète et permet d’explorer librement les variables les plus influentes.",
+        title="Synthèse finale",
+        text=(
+            "En regardant la vue d'ensemble, on s'aperçoit que la réussite scolaire est une pyramide : "
+            "la base solide est faite d'assiduité et de travail personnel. "
+            "Les facteurs extérieurs (école, parents, revenus) ne sont que des bonus qui viennent affiner le résultat. "
+            "C'est une conclusion encourageante : la clé du succès est majoritairement entre les mains de l'élève."
+        ),
         graph_config=GraphConfig(
             show_legend=True,
             show_color_scale=True,
             enable_interactions=True,
         ),
-        title="Synthèse finale",
     ),
 ]
 

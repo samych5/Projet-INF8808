@@ -13,7 +13,14 @@ class StepParameters:
 STEPS_CONFIG = [
     StepParameters(
         title="Résultat",
-        text="Cette heat map montre la note finale moyenne selon le type d'école et la distance entre le domicile et l'école.",
+        text=(
+            "Cette heat map montre la note finale moyenne selon le type d'école et la distance entre le domicile et l'école. "
+            "Les données montrent que la proximité du domicile est un facteur clé de succès : plus un élève habite près de son établissement, "
+            "meilleure est sa note finale, qu'il soit dans le secteur public ou privé. "
+            "S'il existe bien une tendance montrant que la proximité favorise légèrement les résultats, il faut garder en tête que les écarts constatés sont très faibles. "
+            "Le succès d'un élève ne se joue pas uniquement sur son adresse postale. Le type d'école et la distance sont des facteurs d'influence, "
+            "mais ils ne sont pas les seuls moteurs de la réussite scolaire, qui reste globalement constante dans tous les scénarios présentés."
+        ),
         graph_config=GraphConfig(),
     ),
 ]

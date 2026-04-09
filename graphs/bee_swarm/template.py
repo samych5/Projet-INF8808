@@ -138,6 +138,7 @@ def make_active_filters_summary(selected_filters: dict):
 
 def make_section(df: pd.DataFrame, init_step : int = 1):
     total_pages = math.ceil(len(FILTER_KEYS) / FILTERS_PER_PAGE)
+    step_config = STEPS_CONFIG[0]
 
     return html.Div(
         className="beeswarm-section",
@@ -151,9 +152,9 @@ def make_section(df: pd.DataFrame, init_step : int = 1):
                     html.Div(
                         className="text-card",
                         children=[
-                            html.H3("Beeswarm", className="text-card-title"),
+                            html.H3(step_config.title, className="text-card-title"),
                             html.P(
-                                "Ce graphique montre la distribution des scores à l'examen et permet de filtrer les élèves selon différents critères.",
+                                step_config.text,
                                 className="text-card-paragraph",
                             ),
                         ],

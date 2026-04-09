@@ -6,4 +6,4 @@ app = Dash(
     suppress_callback_exceptions=True,
 )
 
-server = app.server 
+server = app.server
