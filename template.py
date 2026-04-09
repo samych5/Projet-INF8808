@@ -11,9 +11,9 @@ def get_home_section():
             html.Div(
                 className="home-overlay",
                 children=[
-                    html.H1("Titre du site", className="home-title"),
+                    html.H1("Analayses des facteurs influençant les notes des élèves", className="home-title"),
                     html.P(
-                        "Texte random",
+                        "Scroller vers le bas pour dévouvrir les analyses",
                         className="home-subtitle",
                     ),
                 ],

@@ -24,10 +24,10 @@ class StepParameters:
         self.title = title
 
 STEPS_CONFIG : list[StepParameters] = [
-    StepParameters("text 1 test", GraphConfig(col_x=ColX.HOURS_STUDIED), title="Scater"),
-    StepParameters("text 2", GraphConfig(col_x=ColX.ATTENDANCE), title="Scater"),
-    StepParameters("text 3", GraphConfig(col_x=ColX.HOURS_STUDIED, visible_gender=[Genres.MEN]), title="Scater"),
-    StepParameters(text="text 4", graph_config=GraphConfig(enable_interactions=True), title="Scater")
+    StepParameters("L'investissement personnel est le levier ayant l'impact le plus direct sur la réussite.", GraphConfig(col_x=ColX.HOURS_STUDIED), title="L'étude a un fort impact."),
+    StepParameters("L'assiduité en classe demeure le facteur de stabilité le plus fiable pour les notes.", GraphConfig(col_x=ColX.ATTENDANCE), title="La présence a un fort impact."),
+    StepParameters("Un soutien utile, mais dont l'impact positif plafonne rapidement malgré l'investissement.", GraphConfig(col_x=ColX.HOURS_STUDIED, visible_gender=[Genres.MEN]), title="Le tutorat a un petit impact."),
+    StepParameters(text="Un facteur vital pour l'équilibre, mais sans lien statistique avec la performance académique.", graph_config=GraphConfig(enable_interactions=True), title="Le sommeil n'a pas d'impact."),
 ]
 
 DEFAULT_CONFIG : StepParameters = StepParameters("default_text", GraphConfig(), title="default_title")

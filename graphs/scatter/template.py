@@ -47,12 +47,15 @@ def make_text_steps(start_index: int = 1):
 
 def make_section(df: DataFrame, start_index: int = 1):
     graph_panels = []
+
     for i in range(len(STEPS_CONFIG)):
         labels = SCATTER_LABELS[i] if i < len(SCATTER_LABELS) else []
+        class_name = "section-graph-frame active" if i == 0 else "section-graph-frame"
+
         graph_panels.append(
             html.Div(
-                id=f"scatter-img-{start_index + i}",
-                style={"display": "none"},
+                className=class_name,
+                **{"data-step": str(start_index + i)},
                 children=[
                     html.Div(
                         className="graph-labels",
@@ -63,7 +66,11 @@ def make_section(df: DataFrame, start_index: int = 1):
                     ),
                     html.Img(
                         src=_load_img("scatter", i),
-                        style={"width": "100%", "height": "100%", "objectFit": "contain"},
+                        style={
+                            "width": "100%",
+                            "height": "100%",
+                            "objectFit": "contain",
+                        },
                     ),
                 ],
             )
@@ -72,6 +79,7 @@ def make_section(df: DataFrame, start_index: int = 1):
     return html.Section(
         id="section-scatter",
         className="story-section scatter-section",
+        **{"data-section": "scatter"},
         children=[
             html.Div(
                 className="story-text-column",
@@ -87,7 +95,7 @@ def make_section(df: DataFrame, start_index: int = 1):
                                 className="graph-panel scatter-panel",
                                 children=[
                                     html.Div(
-                                        className="graph-panel-inner",
+                                        className="graph-panel-inner section-graph-stack",
                                         children=graph_panels,
                                     )
                                 ],

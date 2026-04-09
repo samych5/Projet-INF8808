@@ -40,12 +40,16 @@ def make_text_steps(start_index: int = 1):
 def make_section(df: DataFrame, start_index: int = 1):
     graph_panels = [
         html.Div(
-            id=f"barchart-img-{start_index + i}",
-            style={"display": "none"},
+            className="section-graph-frame active" if i == 0 else "section-graph-frame",
+            **{"data-step": str(start_index + i)},
             children=[
                 html.Img(
                     src=_load_img("barchart", i),
-                    style={"width": "100%", "height": "100%", "objectFit": "contain"},
+                    style={
+                        "width": "100%",
+                        "height": "100%",
+                        "objectFit": "contain",
+                    },
                 )
             ],
         )
@@ -55,6 +59,7 @@ def make_section(df: DataFrame, start_index: int = 1):
     return html.Section(
         id="section-bar-chart",
         className="story-section bar-chart-section",
+        **{"data-section": "barchart"},
         children=[
             html.Div(
                 className="story-text-column",
@@ -70,7 +75,7 @@ def make_section(df: DataFrame, start_index: int = 1):
                                 className="graph-panel bar-chart-panel",
                                 children=[
                                     html.Div(
-                                        className="graph-panel-inner",
+                                        className="graph-panel-inner section-graph-stack",
                                         children=graph_panels,
                                     )
                                 ],

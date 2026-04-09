@@ -34,7 +34,10 @@ def make_text_steps(start_index: int = 1):
                         html.Div(
                             className="text-card boxplot-transition-card",
                             children=[
-                                html.P(step_config.text, className="text-card-paragraph boxplot-transition-text"),
+                                html.P(
+                                    step_config.text,
+                                    className="text-card-paragraph boxplot-transition-text",
+                                ),
                             ],
                         )
                     ],
@@ -50,7 +53,9 @@ def make_text_steps(start_index: int = 1):
                             className="text-card",
                             children=[
                                 html.H3(step_config.title, className="text-card-title"),
-                                html.P(step_config.text, className="text-card-paragraph") if isinstance(step_config.text, str) else step_config.text,
+                                html.P(step_config.text, className="text-card-paragraph")
+                                if isinstance(step_config.text, str)
+                                else step_config.text,
                             ],
                         )
                     ],
@@ -61,23 +66,31 @@ def make_text_steps(start_index: int = 1):
 
 def make_section(df: DataFrame, start_index: int = 1):
     graph_panels = []
+
     for i in range(len(STEPS_CONFIG)):
+        step_value = str(start_index + i)
+        class_name = "section-graph-frame active" if i == 0 else "section-graph-frame"
+
         if i == TRANSITION_STEP_INDEX:
             graph_panels.append(
                 html.Div(
-                    id=f"boxplot-img-{start_index + i}",
-                    style={"display": "none"},
+                    className=class_name,
+                    **{"data-step": step_value},
                 )
             )
         else:
             graph_panels.append(
                 html.Div(
-                    id=f"boxplot-img-{start_index + i}",
-                    style={"display": "none"},
+                    className=class_name,
+                    **{"data-step": step_value},
                     children=[
                         html.Img(
                             src=_load_img("boxplot", i),
-                            style={"width": "100%", "height": "100%", "objectFit": "contain"},
+                            style={
+                                "width": "100%",
+                                "height": "100%",
+                                "objectFit": "contain",
+                            },
                         )
                     ],
                 )
@@ -86,6 +99,7 @@ def make_section(df: DataFrame, start_index: int = 1):
     return html.Section(
         id="section-boxplot",
         className="story-section boxplot-section",
+        **{"data-section": "boxplot"},
         children=[
             html.Div(
                 className="story-text-column",
@@ -101,7 +115,7 @@ def make_section(df: DataFrame, start_index: int = 1):
                                 className="graph-panel boxplot-panel",
                                 children=[
                                     html.Div(
-                                        className="graph-panel-inner",
+                                        className="graph-panel-inner section-graph-stack",
                                         children=graph_panels,
                                     )
                                 ],
