@@ -39,7 +39,7 @@ def make_question_block():
                 className="heat-map-question-card",
                 children=[
                     html.H2(
-                        "Penses-tu que la distance entre le domicile et l’école influence la note finale ?",
+                        "Penses-tu que la distance entre le domicile et l'école influence la note finale ?",
                         className="heat-map-question-title",
                     ),
                     html.Div(
@@ -47,6 +47,7 @@ def make_question_block():
                         children=[
                             html.Button("Oui", id=ID["btn-yes"], n_clicks=0, className="heat-map-btn"),
                             html.Button("Non", id=ID["btn-no"], n_clicks=0, className="heat-map-btn"),
+                            html.Button("Réinitialiser", id=ID["btn-reset"], n_clicks=0, className="heat-map-btn heat-map-btn-reset", style={"display": "none"}),
                         ],
                     ),
                     html.P(

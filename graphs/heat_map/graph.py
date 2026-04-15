@@ -71,16 +71,8 @@ def create_figure(df: pd.DataFrame, config=None) -> go.Figure:
     z_values = pivot.values
     text_values = _get_z_text(z_values)
 
-    valid_values = pivot.stack()
-    if valid_values.empty:
-        zmin, zmax = 0, 100
-    else:
-        zmin = float(valid_values.min())
-        zmax = float(valid_values.max())
-
-        if zmin == zmax:
-            zmin -= 1
-            zmax += 1
+    zmin = 60
+    zmax = 70
 
     fig = go.Figure()
 

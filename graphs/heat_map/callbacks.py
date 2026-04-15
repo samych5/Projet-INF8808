@@ -12,9 +12,10 @@ def register_callbacks(app, df, init_step: int):
         Output(ID["answer-store"], "data"),
         Input(ID["btn-yes"], "n_clicks"),
         Input(ID["btn-no"], "n_clicks"),
+        Input(ID["btn-reset"], "n_clicks"),
         prevent_initial_call=True,
     )
-    def store_answer(yes_clicks, no_clicks):
+    def store_answer(yes_clicks, no_clicks, reset_clicks):
         triggered_id = ctx.triggered_id
 
         if triggered_id == ID["btn-yes"]:
@@ -22,6 +23,9 @@ def register_callbacks(app, df, init_step: int):
 
         if triggered_id == ID["btn-no"]:
             return "no"
+
+        if triggered_id == ID["btn-reset"]:
+            return None
 
         return no_update
 
@@ -39,6 +43,7 @@ def register_callbacks(app, df, init_step: int):
     @app.callback(
         Output(ID["btn-yes"], "style"),
         Output(ID["btn-no"], "style"),
+        Output(ID["btn-reset"], "style"),
         Input(ID["answer-store"], "data"),
     )
     def update_button_styles(answer):
@@ -60,20 +65,27 @@ def register_callbacks(app, df, init_step: int):
             "color": "white",
         }
 
-        hidden_style = {
-            "display": "none",
-        }
+        hidden_style = {"display": "none"}
+
+        reset_style = {
+    "padding": "12px 24px",
+    "border": "none",
+    "borderRadius": "12px",
+    "cursor": "pointer",
+    "backgroundColor": "#ececec",
+    "color": "black",
+}
 
         if answer is None:
-            return default_style, default_style
-
+            return default_style, default_style, hidden_style
+        
         if answer == "yes":
-            return selected_style, hidden_style
+            return default_style, hidden_style, reset_style
 
         if answer == "no":
-            return hidden_style, selected_style
+            return hidden_style, default_style, reset_style
 
-        return default_style, default_style
+        return default_style, default_style, hidden_style
 
     @app.callback(
         Output(ID["question-text"], "children"),
@@ -84,9 +96,9 @@ def register_callbacks(app, df, init_step: int):
             return ""
 
         if answer == "yes":
-            return "C’est aussi le cas de 75 % des parents, mais cela ne représente pas la réalité. Voici comment 100 parents d’élèves ont répondu à cette même question :"
+            return "C'est aussi le cas de 75 % des parents, mais cela ne représente pas la réalité. Voici comment 100 parents d'élèves ont répondu à cette même question :"
 
-        return "Pourtant, seulement 25 % des parents pensent cela, mais cela ne représente pas la réalité. Voici comment 100 parents d’élèves ont répondu à cette même question :"
+        return "Pourtant, seulement 25 % des parents pensent cela, mais cela ne représente pas la réalité. Voici comment 100 parents d'élèves ont répondu à cette même question :"
 
     @app.callback(
         Output(ID["pie-wrapper"], "style"),

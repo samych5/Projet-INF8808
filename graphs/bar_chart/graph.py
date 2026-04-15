@@ -248,29 +248,6 @@ def _add_category_legend(fig: go.Figure):
         )
     )
 
-def _add_vertical_guides(fig: go.Figure, impact_df: pd.DataFrame):
-    if impact_df.empty:
-        return
-
-    x_min = float(impact_df["impact"].min())
-    x_max = float(impact_df["impact"].max())
-
-    start = round(min(0, x_min), 2)
-    end = round(x_max + 0.05, 2)
-    ticks = np.arange(start, end, 0.05)
-
-    for t in ticks:
-        fig.add_shape(
-            type="line",
-            x0=t,
-            x1=t,
-            y0=0,
-            y1=1,
-            xref="x",
-            yref="paper",
-            line=dict(color="rgba(0,0,0,0.08)", width=1),
-            layer="below",
-        )
 
 def create_figure(df: pd.DataFrame, config=None) -> go.Figure:
     impact_df = _compute_correlations(df)
@@ -316,10 +293,7 @@ def create_figure(df: pd.DataFrame, config=None) -> go.Figure:
                 ),
             ),
             text=impact_df["impact"].round(2),
-            textposition=[
-                "outside"
-                for _ in impact_df["impact"]
-            ],
+            textposition=["outside" for _ in impact_df["impact"]],
             insidetextanchor="middle",
             textfont=dict(color=text_colors),
             hoverinfo="skip"
@@ -332,14 +306,6 @@ def create_figure(df: pd.DataFrame, config=None) -> go.Figure:
     if config is None or getattr(config, "show_legend", True):
         _add_category_legend(fig)
 
-    _add_vertical_guides(fig, impact_df)
-
-    x_min = float(impact_df["impact"].min())
-    x_max = float(impact_df["impact"].max())
-
-    left_pad = max(0.08, abs(x_min) + 0.04)
-    right_pad = 0.06
-
     fig.update_layout(
         title="Impact des facteurs sur la performance scolaire",
         xaxis_title="Corrélation avec la note finale",
@@ -348,7 +314,7 @@ def create_figure(df: pd.DataFrame, config=None) -> go.Figure:
         paper_bgcolor="white",
         margin=dict(l=180, r=120, t=80, b=50),
         autosize=True,
-        bargap=0.25,
+        bargap=0.1,
         legend=dict(
             orientation="h",
             y=-0.18,
@@ -363,13 +329,23 @@ def create_figure(df: pd.DataFrame, config=None) -> go.Figure:
         dragmode=False,
     )
 
+    x_range = config.x_range if config is not None and hasattr(config, "x_range") else [-1, 1]
+    if x_range == [0, 1]:
+        tick_vals = [0, 0.25, 0.5, 0.75, 1]
+        tick_text = ["0", "0.25", "0.5", "0.75", "1"]
+    else:
+        tick_vals = [-1, -0.5, 0, 0.5, 1]
+        tick_text = ["-1", "-0.5", "0", "0.5", "1"]
+
     fig.update_xaxes(
         showgrid=False,
-        range=[-left_pad, x_max + right_pad],
+        range=x_range,
         zeroline=True,
         zerolinecolor="rgba(0,0,0,0.25)",
         zerolinewidth=1,
         layer="below traces",
+        tickvals=tick_vals,
+        ticktext=tick_text,
     )
 
     fig.update_yaxes(

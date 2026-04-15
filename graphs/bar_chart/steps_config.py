@@ -28,6 +28,7 @@ class GraphConfig:
         layers: list = None,
         enable_interactions: bool = False,
         factor_brightness: dict[Factors, bool] | None = None,
+        x_range: list = [-1, 1],
     ):
         if layers is None:
             layers = []
@@ -37,6 +38,7 @@ class GraphConfig:
         self.show_color_scale = show_color_scale
         self.layers = layers
         self.enable_interactions = enable_interactions
+        self.x_range = x_range
 
         self.factor_brightness = {
             factor.column: True for factor in visible_factors
@@ -124,6 +126,7 @@ STEPS_CONFIG: list[StepParameters] = [
             ],
             show_legend=True,
             show_color_scale=True,
+            x_range=[0, 1],
             factor_brightness={
                 Factors.PARENTAL_INVOLVEMENT: True,
                 Factors.FAMILY_INCOME: True,
@@ -149,6 +152,7 @@ STEPS_CONFIG: list[StepParameters] = [
             ],
             show_legend=True,
             show_color_scale=True,
+            x_range=[0, 1],
             factor_brightness={
                 Factors.ACCESS_TO_RESOURCES: True,
                 Factors.DISTANCE: False,
