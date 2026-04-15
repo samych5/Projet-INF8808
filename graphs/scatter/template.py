@@ -18,14 +18,6 @@ def _load_img(graph_name: str, index: int) -> str:
     return f"data:image/png;base64,{encoded}"
 
 
-SCATTER_LABELS = [
-    ["Heures d'étude par semaine", "Activités parascolaires"],
-    ["Taux de présence (%)", "Activités parascolaires"],
-    ["Heures d'étude par semaine", "Activités parascolaires"],
-    ["Heures d'étude par semaine", "Activités parascolaires"],
-]
-
-
 def make_text_steps(start_index: int = 1):
     return [
         html.Div(
@@ -49,7 +41,6 @@ def make_section(df: DataFrame, start_index: int = 1):
     graph_panels = []
 
     for i in range(len(STEPS_CONFIG)):
-        labels = SCATTER_LABELS[i] if i < len(SCATTER_LABELS) else []
         class_name = "section-graph-frame active" if i == 0 else "section-graph-frame"
 
         graph_panels.append(
@@ -57,13 +48,6 @@ def make_section(df: DataFrame, start_index: int = 1):
                 className=class_name,
                 **{"data-step": str(start_index + i)},
                 children=[
-                    html.Div(
-                        className="graph-labels",
-                        children=[
-                            html.Div(label, className="graph-label-pill")
-                            for label in labels
-                        ],
-                    ),
                     html.Img(
                         src=_load_img("scatter", i),
                         style={

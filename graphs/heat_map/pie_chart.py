@@ -29,6 +29,10 @@ def create_pie_chart():
                 textinfo="label+percent",
                 sort=False,
                 hoverinfo="skip",
+                marker=dict(
+                    colors=["#1a6fdb", "#ffffff"],
+                    line=dict(color="#e5e7eb", width=1),
+                ),
             )
         ]
     )

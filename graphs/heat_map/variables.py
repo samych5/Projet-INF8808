@@ -68,4 +68,5 @@ ID = {
     "pie-chart": "heat-map-pie-chart",
     "pie-wrapper": "heat-map-pie-wrapper",
     "question-text": "heat-map-question-text",
+    "btn-reset": "heat-map-btn-reset",
 }

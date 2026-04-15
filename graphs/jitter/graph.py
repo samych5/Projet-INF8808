@@ -11,9 +11,8 @@ from .variables import *
 
 COLORS = {Genres.MEN: "#1a6fdb", Genres.WOMEN: "#ff1493"}
 
-def make_initial_graph(
-    df: pd.DataFrame,
-):
+
+def make_initial_graph(df: pd.DataFrame):
     return dcc.Graph(
         id=ID["graph"],
         figure=create_figure(df, get_step_graph_config(0)),
@@ -25,10 +24,8 @@ def make_initial_graph(
         className="graph",
     )
 
-def create_figure(
-    df: pd.DataFrame,
-    config: GraphConfig,
-) -> go.Figure:
+
+def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
     col_x = config.col_x
     label_x = AXES_X.get(ColX(config.col_x), col_x)
 
@@ -63,6 +60,12 @@ def create_figure(
         )
 
     fig.update_layout(
+        title=dict(
+            text=config.title_graph,
+            x=0.5,
+            xanchor="center",
+            font=dict(size=15),
+        ),
         xaxis_title=label_x,
         yaxis_title="Note finale",
         plot_bgcolor="white",
@@ -76,7 +79,7 @@ def create_figure(
             itemclick=False if not config.enable_interactions else "toggle",
             itemdoubleclick=False if not config.enable_interactions else "toggleothers",
         ),
-        margin=dict(l=60, r=20, t=20, b=60),
+        margin=dict(l=60, r=20, t=60, b=60),
         hovermode="closest",
         xaxis=dict(
             tickvals=sorted(df[col_x].dropna().unique().tolist()),
