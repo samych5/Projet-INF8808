@@ -1,6 +1,5 @@
 dash==2.17.1
 plotly==6.6.0
-numpy==1.26.4
 pandas==3.0.1
 gunicorn
 kaleido==1.2.0
