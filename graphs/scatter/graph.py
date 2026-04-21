@@ -19,18 +19,6 @@ AXES_X_LABELS = {
     ColX.ATTENDANCE.value: "Taux de présence en classe (%)",
 }
 
-
-def make_initial_graph(df: pd.DataFrame):
-    return dcc.Graph(
-        figure=create_figure(df, get_step_graph_config(0)),
-        config={
-            "displayModeBar": False,
-            "scrollZoom": False,
-            "doubleClick": False,
-        },
-        className="graph",
-    )
-
 def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
     label_x = AXES_X_LABELS.get(config.col_x, config.col_x)
     fig = go.Figure()

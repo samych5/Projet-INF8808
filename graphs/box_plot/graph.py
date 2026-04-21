@@ -42,19 +42,6 @@ LEVEL_OFFSETS = {
     Levels.HIGH.label: 0.25,
 }
 
-
-def make_initial_graph(df: pd.DataFrame):
-    return dcc.Graph(
-        figure=create_figure(df, get_step_graph_config(0)),
-        config={
-            "displayModeBar": False,
-            "scrollZoom": False,
-            "doubleClick": False,
-        },
-        className="graph",
-    )
-
-
 def _format_factor_label(col: str) -> str:
     return (
         col.replace("_", " ")

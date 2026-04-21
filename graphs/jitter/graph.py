@@ -8,19 +8,6 @@ from .variables import *
 
 COLORS = {Genres.MEN: "#1a6fdb", Genres.WOMEN: "#ff1493"}
 
-
-def make_initial_graph(df: pd.DataFrame):
-    return dcc.Graph(
-        figure=create_figure(df, get_step_graph_config(0)),
-        config={
-            "displayModeBar": False,
-            "scrollZoom": False,
-            "doubleClick": False,
-        },
-        className="graph",
-    )
-
-
 def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
     col_x = config.col_x
     label_x = AXES_X.get(ColX(config.col_x), col_x)

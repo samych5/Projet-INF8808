@@ -19,19 +19,6 @@ CATEGORY_PATTERN = {
     FactorCategory.SCHOOL: "/",
 }
 
-
-def make_initial_graph(df: pd.DataFrame):
-    return dcc.Graph(
-        figure=create_figure(df, get_step_graph_config(0)),
-        config={
-            "displayModeBar": False,
-            "scrollZoom": False,
-            "doubleClick": False,
-        },
-        className="graph",
-    )
-
-
 def _encode_column(df: pd.DataFrame, col: str) -> pd.Series:
     unique_vals = df[col].dropna().unique()
 
