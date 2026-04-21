@@ -575,7 +575,8 @@ body {
   width: 90%;
 }
 
-.boxplot-transition-step {
+.boxplot-transition-step,
+.barchart-transition-step {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -583,7 +584,8 @@ body {
   position: relative;
 }
 
-.boxplot-transition-card {
+.boxplot-transition-card,
+.barchart-transition-card {
   position: absolute;
   left: 0;
   width: 400%;
@@ -591,7 +593,8 @@ body {
   max-width: none;
 }
 
-.boxplot-transition-text {
+.boxplot-transition-text,
+.barchart-transition-text {
   font-size: 24px;
   font-weight: 500;
   line-height: 1.6;

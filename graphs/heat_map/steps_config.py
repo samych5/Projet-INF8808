@@ -14,12 +14,14 @@ STEPS_CONFIG = [
     StepParameters(
         title="Résultat",
         text=(
-            "Cette carte de chaleur montre la note finale moyenne selon le type d'école et la distance entre le domicile et l'école. "
-            "Les données montrent que la proximité du domicile est un facteur clé de succès : plus un élève habite près de son établissement, "
-            "meilleure est sa note finale, qu'il soit dans le secteur public ou privé. "
-            "S'il existe bien une tendance montrant que la proximité favorise légèrement les résultats, il faut garder en tête que les écarts constatés sont très faibles. "
-            "Le succès d'un élève ne se joue pas uniquement sur son adresse postale. Le type d'école et la distance sont des facteurs d'influence, "
-            "mais ils ne sont pas les seuls moteurs de la réussite scolaire, qui reste globalement constante dans tous les scénarios présentés."
+            "Cette carte de chaleur présente la note finale moyenne selon le type d’école et la distance entre le domicile et l’établissement. "
+            "On observe une légère tendance indiquant que les élèves qui habitent plus près de leur école obtiennent des résultats un peu plus élevés, "
+            "que ce soit dans le secteur public ou privé. Cependant, les écarts observés restent très faibles (environ 1 %), ce qui n’est pas suffisant "
+            "pour conclure à une différence réelle ou significative sur le plan statistique. Autrement dit, même si la proximité semble associée à de "
+            "meilleurs résultats, cette relation demeure limitée et doit être interprétée avec prudence. Cela dit, sur le plan logique et dans la réalité "
+            "quotidienne, il est donc valable de vouloir réduire le temps de transport, la fatigue et créer potentiellement plus de temps disponible pour "
+            "étudier ou se reposer en plaçant son enfant dans une école plus proche de la maison. Cependant, ces éléments, distance et type d’école, ne "
+            "suffisent pas à expliquer à eux seuls les performances académiques, qui dépendent d’un ensemble de facteurs beaucoup plus larges."
         ),
         graph_config=GraphConfig(),
     ),

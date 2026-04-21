@@ -34,7 +34,7 @@ STEPS_CONFIG: list[StepParameters] = [
         "Les données confirment que les heures consacrées à l'étude ne sont pas seulement un soutien, mais un réel levier ayant un fort impact sur la réussite finale.",
         GraphConfig(
             col_x=ColX.HOURS_STUDIED,
-            title_graph="Impact des heures d'études et pratiques d'activités parascolaires",
+            title_graph="Impact des heures d'études et pratique d'activités parascolaires",
             layers=[LinearTrendLayer()],
         ),
         title="Heures d'études.",

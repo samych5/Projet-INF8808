@@ -13,7 +13,7 @@ def get_home_section():
                 children=[
                     html.H1("Analayses des facteurs influençant les notes des élèves", className="home-title"),
                     html.H3(
-                        "Scroller vers le bas pour dévouvrir les analyses",
+                        "Scroller vers le bas pour découvrir les analyses",
                         className="home-subtitle",
                     ),
                 ],

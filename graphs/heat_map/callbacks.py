@@ -80,10 +80,10 @@ def register_callbacks(app, df, init_step: int):
             return default_style, default_style, hidden_style
 
         if answer == "yes":
-            return default_style, hidden_style, reset_style
+            return selected_style, hidden_style, reset_style
 
         if answer == "no":
-            return hidden_style, default_style, reset_style
+            return hidden_style, selected_style, reset_style
 
         return default_style, default_style, hidden_style
 
@@ -123,4 +123,4 @@ def register_callbacks(app, df, init_step: int):
         Input(ID["answer-store"], "data"),
     )
     def update_pie_chart(answer):
-        return create_pie_chart()
+        return create_pie_chart(answer)

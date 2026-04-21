@@ -58,9 +58,20 @@ class StepParameters:
 
 STEPS_CONFIG: list[StepParameters] = [
     StepParameters(
+        title="",
+        text=(
+            "Regardons maintenant les impacts en général."
+        ),
+        graph_config=GraphConfig(
+            show_legend=False,
+            show_color_scale=False,
+            visible_factors=[],
+        ),
+    ),
+    StepParameters(
         title="Qu'est-ce qui fait vraiment la réussite d'un élève ?",
         text=(
-            "Pour répondre à cette question, nous avons analysé une multitude de facteurs — du cadre de vie à l'effort personnel, "
+            "Pour répondre à cette question, nous avons analysé une multitude de facteurs du cadre de vie à l'effort personnel, "
             "en passant par l'environnement familial. Ce graphique classe ces variables selon leur degré de corrélation avec la note finale : "
             "plus la barre est longue et bleue, plus le facteur a un impact direct sur la performance."
         ),
