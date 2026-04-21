@@ -11,7 +11,6 @@ COLORS = {Genres.MEN: "#1a6fdb", Genres.WOMEN: "#ff1493"}
 
 def make_initial_graph(df: pd.DataFrame):
     return dcc.Graph(
-        id=ID["graph"],
         figure=create_figure(df, get_step_graph_config(0)),
         config={
             "displayModeBar": False,

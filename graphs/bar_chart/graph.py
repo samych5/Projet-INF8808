@@ -5,7 +5,6 @@ from dash import dcc
 
 from .steps_config import get_step_graph_config
 from .variables import (
-    ID,
     FactorCategory,
     FACTOR_LABELS,
     FACTOR_CATEGORIES,
@@ -23,7 +22,6 @@ CATEGORY_PATTERN = {
 
 def make_initial_graph(df: pd.DataFrame):
     return dcc.Graph(
-        id=ID["graph"],
         figure=create_figure(df, get_step_graph_config(0)),
         config={
             "displayModeBar": False,
