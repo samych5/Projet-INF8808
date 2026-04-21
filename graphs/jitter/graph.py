@@ -3,27 +3,10 @@ import pandas as pd
 from dash import dcc
 import numpy as np
 
-from utils.graph_display import add_layer_to_figure
-
 from .steps_config import GraphConfig, get_step_graph_config
-from .hover_template import make_hover_component
 from .variables import *
 
 COLORS = {Genres.MEN: "#1a6fdb", Genres.WOMEN: "#ff1493"}
-
-
-def make_initial_graph(df: pd.DataFrame):
-    return dcc.Graph(
-        id=ID["graph"],
-        figure=create_figure(df, get_step_graph_config(0)),
-        config={
-            "displayModeBar": False,
-            "scrollZoom": False,
-            "doubleClick": False,
-        },
-        className="graph",
-    )
-
 
 def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
     col_x = config.col_x
@@ -55,7 +38,6 @@ def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
                     opacity=0.45,
                     line=dict(width=0),
                 ),
-                hovertemplate=make_hover_component(label_x, genre.value),
             )
         )
 

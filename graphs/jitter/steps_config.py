@@ -1,4 +1,4 @@
-from .layers import BaseLayer, LinearTrendLayer
+from utils.layers import BaseLayer, LinearTrendLayer
 from .variables import *
 
 class GraphConfig:
@@ -28,31 +28,31 @@ class StepParameters:
 
 STEPS_CONFIG: list[StepParameters] = [
     StepParameters(
-        "Un soutien utile, mais dont l'impact positif plafonne rapidement malgré l'investissement.",
+        "Bien qu'utile pour débloquer des concepts précis, l'impact statistique du tutorat plafonne rapidement, suggérant qu'il ne peut se substituer à un travail personnel de fond.",
         GraphConfig(
             col_x=ColX.TUTORING_SESSIONS,
             layers=[LinearTrendLayer()],
             title_graph="Impact du tutorat",
         ),
-        title="Le tutorat a un petit impact.",
+        title=" Tutorat",
     ),
     StepParameters(
-        "Un facteur vital pour l'équilibre, mais sans lien statistique avec la performance académique.",
+        "Bien qu'essentiel à la santé mentale et physique, le temps de repos ne montre pas de lien statistique significatif avec la performance brute, indiquant que l'efficacité du travail prime sur la simple récupération.",
         GraphConfig(
             col_x=ColX.SLEEP_HOURS,
             layers=[LinearTrendLayer()],
             title_graph="Impact des heures de sommeil",
         ),
-        title="Le sommeil n'a pas d'impact.",
+        title="Sommeil",
     ),
     StepParameters(
-        "Essentiel pour la santé, mais sans incidence mesurable sur la moyenne finale.",
+        "Si le sport est indispensable à l'équilibre de vie de l'élève, son impact sur les résultats académiques est quasi nul dans nos données, confirmant une indépendance entre performance cognitive scolaire et forme physique.",
         GraphConfig(
             col_x=ColX.PHYSICAL_ACTIVITY,
             layers=[LinearTrendLayer()],
             title_graph="Impact de l'activité physique",
         ),
-        title="L'activité physique n'a pas d'impact.",
+        title=" Activité physique",
     ),
 ]
 

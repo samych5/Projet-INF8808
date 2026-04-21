@@ -84,29 +84,29 @@
 }
 
 .home-section {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-image: url('/assets/images/Image_accueil.png');
-    background-size: cover;
-    background-position: center;
-    padding: 40px;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("/assets/images/home/home_image.png");
+  background-size: cover;
+  background-position: center;
+  padding: 40px;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
 
 .page-container {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .graph {
@@ -700,5 +700,5 @@ body {
 }
 
 .heat-map-step {
-    opacity: 1 !important;
+  opacity: 1 !important;
 }

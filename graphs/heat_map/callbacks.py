@@ -68,17 +68,17 @@ def register_callbacks(app, df, init_step: int):
         hidden_style = {"display": "none"}
 
         reset_style = {
-    "padding": "12px 24px",
-    "border": "none",
-    "borderRadius": "12px",
-    "cursor": "pointer",
-    "backgroundColor": "#ececec",
-    "color": "black",
-}
+            "padding": "12px 24px",
+            "border": "none",
+            "borderRadius": "12px",
+            "cursor": "pointer",
+            "backgroundColor": "#ececec",
+            "color": "black",
+        }
 
         if answer is None:
             return default_style, default_style, hidden_style
-        
+
         if answer == "yes":
             return default_style, hidden_style, reset_style
 

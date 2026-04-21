@@ -14,9 +14,3 @@ AXES_X = {
     ColX.PHYSICAL_ACTIVITY: "Activité physique (sessions/semaine)",
     ColX.SLEEP_HOURS: "Heures de sommeil par nuit",
 }
-
-ID = {
-    "graph" : "graph-jitter",
-    "dropdown-x" : "dropdown-jitter-x",
-    "figures-store": "jitter-figures-store"
-}

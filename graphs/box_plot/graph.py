@@ -2,7 +2,6 @@ import pandas as pd
 import plotly.graph_objects as go
 from dash import dcc
 
-from utils.graph_display import add_layer_to_figure
 from .steps_config import GraphConfig, get_step_graph_config
 from .variables import *
 
@@ -42,20 +41,6 @@ LEVEL_OFFSETS = {
     Levels.MEDIUM.label: 0.0,
     Levels.HIGH.label: 0.25,
 }
-
-
-def make_initial_graph(df: pd.DataFrame):
-    return dcc.Graph(
-        id=ID["graph"],
-        figure=create_figure(df, get_step_graph_config(0)),
-        config={
-            "displayModeBar": False,
-            "scrollZoom": False,
-            "doubleClick": False,
-        },
-        className="graph",
-    )
-
 
 def _format_factor_label(col: str) -> str:
     return (
@@ -210,11 +195,6 @@ def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
                     boxpoints="outliers",
                     jitter=0,
                     pointpos=0,
-                    hovertemplate=(
-                        f"<b>{factor}</b><br>"
-                        f"Niveau : {level}<br>"
-                        "Note : %{y:.1f}%<extra></extra>"
-                    ),
                 )
             )
 
@@ -284,8 +264,5 @@ def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
         linecolor="#1a1a1a",
         linewidth=1.2,
     )
-
-    for layer in config.layers:
-        add_layer_to_figure(fig, layer)
 
     return fig

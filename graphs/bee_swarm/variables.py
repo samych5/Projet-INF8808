@@ -61,12 +61,6 @@ LABELS = {
     "Exam_Score": "Score à l'examen",
 }
 
-PALETTE = [
-    "#e07b00", "#3b82f6", "#22c55e", "#ec4899",
-    "#a855f7", "#f97316", "#14b8a6", "#eab308",
-    "#f87171", "#67e8f9",
-]
-
 ID = {
     "graph": "beeswarm-graph",
     "selected-filters-store": "beeswarm-selected-filters-store",

@@ -21,9 +21,3 @@ class Levels(Enum):
 
     def __str__(self):
         return self.label
-
-
-ID = {
-    "graph": "graph-box-plot",
-    "figures-store": "box-plot-figures-store"
-}

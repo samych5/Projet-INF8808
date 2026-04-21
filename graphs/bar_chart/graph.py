@@ -5,7 +5,6 @@ from dash import dcc
 
 from .steps_config import get_step_graph_config
 from .variables import (
-    ID,
     FactorCategory,
     FACTOR_LABELS,
     FACTOR_CATEGORIES,
@@ -19,20 +18,6 @@ CATEGORY_PATTERN = {
     FactorCategory.PARENTS: ".",
     FactorCategory.SCHOOL: "/",
 }
-
-
-def make_initial_graph(df: pd.DataFrame):
-    return dcc.Graph(
-        id=ID["graph"],
-        figure=create_figure(df, get_step_graph_config(0)),
-        config={
-            "displayModeBar": False,
-            "scrollZoom": False,
-            "doubleClick": False,
-        },
-        className="graph",
-    )
-
 
 def _encode_column(df: pd.DataFrame, col: str) -> pd.Series:
     unique_vals = df[col].dropna().unique()

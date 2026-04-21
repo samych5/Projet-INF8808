@@ -4,7 +4,6 @@ import numpy as np
 from dash import dcc
 
 from .steps_config import GraphConfig, get_step_graph_config
-from .hover_template import make_hover_component
 from .variables import *
 
 COLORS = {Genres.MEN: "#1a6fdb", Genres.WOMEN: "#ff1493"}
@@ -19,44 +18,6 @@ AXES_X_LABELS = {
     ColX.HOURS_STUDIED.value: "Heures d'études",
     ColX.ATTENDANCE.value: "Taux de présence en classe (%)",
 }
-
-
-def make_initial_graph(df: pd.DataFrame):
-    return dcc.Graph(
-        id=ID["graph"],
-        figure=create_figure(df, get_step_graph_config(0)),
-        config={
-            "displayModeBar": False,
-            "scrollZoom": False,
-            "doubleClick": False,
-        },
-        className="graph",
-    )
-
-
-def _add_trend_line(fig, df, config):
-    x = pd.to_numeric(df[config.col_x], errors="coerce")
-    y = pd.to_numeric(df["Exam_Score"], errors="coerce")
-    mask = x.notna() & y.notna()
-    x = x[mask].to_numpy()
-    y = y[mask].to_numpy()
-
-    if len(x) < 2:
-        return
-
-    slope, intercept = np.polyfit(x, y, 1)
-    x_line = np.array([x.min(), x.max()])
-    y_line = slope * x_line + intercept
-
-    fig.add_trace(go.Scatter(
-        x=x_line,
-        y=y_line,
-        mode="lines",
-        name="Tendance",
-        line=dict(color="black", width=2.5),
-        showlegend=True,
-    ))
-
 
 def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
     label_x = AXES_X_LABELS.get(config.col_x, config.col_x)
@@ -97,12 +58,6 @@ def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
                     opacity=opacity,
                     line=dict(width=1.4, color=color),
                 ),
-                hovertemplate=make_hover_component(
-                    label_x,
-                    genre.value,
-                    str(val),
-                    SYMBOL_VAR_LABELS.get(config.col_symbol)
-                ),
             ))
 
     if config.show_legend:
@@ -116,8 +71,6 @@ def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
             name=label_non,
             marker=dict(color="grey", symbol="circle", size=7, opacity=0.20),
         ))
-
-    _add_trend_line(fig, df, config)
 
     fig.update_layout(
         title=dict(
@@ -149,6 +102,9 @@ def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
         transition=dict(duration=0),
         dragmode=False,
     )
+
+    for layer in config.layers:
+        layer.apply(fig, df, config)
 
     fig.update_xaxes(
         showgrid=True,

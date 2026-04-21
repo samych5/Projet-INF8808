@@ -22,18 +22,18 @@ class SectionParameters:
         self,
         construction_function : Callable[[DataFrame, int], html.Section],
         n_steps : Callable[[], int],
-        callback: Callable[[Dash,DataFrame,int], None]
+        callback: Callable[[Dash,DataFrame,int], None] | None
     ):
         self.construction_function = construction_function
         self.get_steps_number = n_steps
         self.callback = callback
 
 SECTIONS = [
-    SectionParameters(make_scatter_section, scatter_steps, lambda app, df, step: None),
-    SectionParameters(make_jitter_section, jitter_steps, lambda app, df, step: None),
-    SectionParameters(make_box_plot_steps_section, box_plot_steps, lambda app, df, step: None),
+    SectionParameters(make_scatter_section, scatter_steps, None),
+    SectionParameters(make_jitter_section, jitter_steps, None),
+    SectionParameters(make_box_plot_steps_section, box_plot_steps, None),
     SectionParameters(make_heat_map_steps_section, heat_map_steps, register_heat_map_callbacks),
-    SectionParameters(make_bar_chart_steps_section, bar_chart_steps, lambda app, df, step: None),
+    SectionParameters(make_bar_chart_steps_section, bar_chart_steps, None),
     SectionParameters(make_bee_swarm_steps_section, bee_swarm_steps, register_bee_swarm_callbacks),
 ]
 

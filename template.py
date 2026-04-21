@@ -7,7 +7,18 @@ def get_home_section():
     return html.Section(
         id="home-section",
         className="home-section",
-        children=[],
+        children=[
+            html.Div(
+                className="home-overlay",
+                children=[
+                    html.H1("Analayses des facteurs influençant les notes des élèves", className="home-title"),
+                    html.H3(
+                        "Scroller vers le bas pour dévouvrir les analyses",
+                        className="home-subtitle",
+                    ),
+                ],
+            )
+        ],
     )
 
 

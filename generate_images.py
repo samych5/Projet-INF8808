@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -16,7 +17,19 @@ from graphs.box_plot.steps_config import STEPS_CONFIG as BOXPLOT_STEPS
 from graphs.bar_chart.graph import create_figure as barchart_fig
 from graphs.bar_chart.steps_config import STEPS_CONFIG as BARCHART_STEPS
 
-OUTPUT_DIR = os.path.join("assets", "images")
+OUTPUT_DIR = os.path.join("assets", "images", "graphs")
+
+if os.path.exists(OUTPUT_DIR):
+    for filename in os.listdir(OUTPUT_DIR):
+        file_path = os.path.join(OUTPUT_DIR, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print(f"Erreur suppression {file_path}: {e}")
+
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 df = get_data()
