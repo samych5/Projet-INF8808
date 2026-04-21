@@ -29,20 +29,20 @@ class StepParameters:
 
 STEPS_CONFIG: list[StepParameters] = [
     StepParameters(
-        "L'investissement personnel est le levier ayant l'impact le plus direct sur la réussite.",
+        "Les données confirment que les heures consacrées à l'étude ne sont pas seulement un soutien, mais un réel levier ayant un fort impact sur la réussite finale.",
         GraphConfig(
             col_x=ColX.HOURS_STUDIED,
             title_graph="Impact des heures d'études et pratiques d'activités parascolaires",
         ),
-        title="L'étude a un fort impact.",
+        title="Heures d'études.",
     ),
     StepParameters(
-        "L'assiduité en classe demeure le facteur de stabilité le plus fiable pour les notes.",
+        "L'analyse montre que la présence constante en classe demeure un facteur ayant un impact positif sur les résultats scolaires.",
         GraphConfig(
             col_x=ColX.ATTENDANCE,
             title_graph="Impact de la présence en classe et la pratique d'activités parascolaires",
         ),
-        title="La présence a un fort impact.",
+        title="Présence en classe",
     ),
 ]
 
