@@ -2,7 +2,6 @@ import pandas as pd
 import plotly.graph_objects as go
 from dash import dcc
 
-from utils.graph_display import add_layer_to_figure
 from .steps_config import GraphConfig, get_step_graph_config
 from .variables import *
 
@@ -278,8 +277,5 @@ def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
         linecolor="#1a1a1a",
         linewidth=1.2,
     )
-
-    for layer in config.layers:
-        add_layer_to_figure(fig, layer)
 
     return fig

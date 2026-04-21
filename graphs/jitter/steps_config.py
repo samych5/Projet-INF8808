@@ -1,4 +1,4 @@
-from .layers import BaseLayer, LinearTrendLayer
+from utils.layers import BaseLayer, LinearTrendLayer
 from .variables import *
 
 class GraphConfig:

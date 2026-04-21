@@ -2,8 +2,6 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
-from .variables import AXES_X
-
 class BaseLayer:
     def apply(self, fig, df, config):
         raise NotImplementedError

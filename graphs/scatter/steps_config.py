@@ -1,3 +1,5 @@
+from utils.layers import LinearTrendLayer, BaseLayer
+
 from .variables import *
 
 class GraphConfig:
@@ -7,7 +9,7 @@ class GraphConfig:
         col_symbol: SymbolVar = SymbolVar.EXTRACURRICULAR_ACTIVITIES,
         visible_gender: list[Genres] = [Genres.MEN, Genres.WOMEN],
         show_legend: bool = True,
-        layers: list = [],
+        layers: list[BaseLayer] = [],
         enable_interactions: bool = False,
         title_graph: str = "",
     ):
@@ -33,6 +35,7 @@ STEPS_CONFIG: list[StepParameters] = [
         GraphConfig(
             col_x=ColX.HOURS_STUDIED,
             title_graph="Impact des heures d'études et pratiques d'activités parascolaires",
+            layers=[LinearTrendLayer()],
         ),
         title="Heures d'études.",
     ),
@@ -41,6 +44,7 @@ STEPS_CONFIG: list[StepParameters] = [
         GraphConfig(
             col_x=ColX.ATTENDANCE,
             title_graph="Impact de la présence en classe et la pratique d'activités parascolaires",
+            layers=[LinearTrendLayer()],
         ),
         title="Présence en classe",
     ),
