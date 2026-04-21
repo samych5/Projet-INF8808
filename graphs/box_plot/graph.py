@@ -210,11 +210,6 @@ def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
                     boxpoints="outliers",
                     jitter=0,
                     pointpos=0,
-                    hovertemplate=(
-                        f"<b>{factor}</b><br>"
-                        f"Niveau : {level}<br>"
-                        "Note : %{y:.1f}%<extra></extra>"
-                    ),
                 )
             )
 

@@ -23,11 +23,3 @@ SYMBOL_VAR_LABELS: dict[SymbolVar, str] = {
     SymbolVar.INTERNET_ACCESS: "Accès internet",
     SymbolVar.LEARNING_DISORDER: "Troubles d'apprentissage",
 }
-
-ID = {
-    "graph": "graph-scatter",
-    "dropdown-x": "dropdown-scatter-x",
-    "dropdown-symbol": "dropdown-scatter-symbol",
-    "figures-store": "scatter-figures-store",
-    "story-figure-active": "story-figure-active",
-}

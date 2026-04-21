@@ -4,7 +4,6 @@ import numpy as np
 from dash import dcc
 
 from .steps_config import GraphConfig, get_step_graph_config
-from .hover_template import make_hover_component
 from .variables import *
 
 COLORS = {Genres.MEN: "#1a6fdb", Genres.WOMEN: "#ff1493"}
@@ -23,7 +22,6 @@ AXES_X_LABELS = {
 
 def make_initial_graph(df: pd.DataFrame):
     return dcc.Graph(
-        id=ID["graph"],
         figure=create_figure(df, get_step_graph_config(0)),
         config={
             "displayModeBar": False,
@@ -96,12 +94,6 @@ def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
                     size=7,
                     opacity=opacity,
                     line=dict(width=1.4, color=color),
-                ),
-                hovertemplate=make_hover_component(
-                    label_x,
-                    genre.value,
-                    str(val),
-                    SYMBOL_VAR_LABELS.get(config.col_symbol)
                 ),
             ))
 

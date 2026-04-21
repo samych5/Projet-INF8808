@@ -66,9 +66,3 @@ FACTOR_CATEGORIES = {
     Factors.ACCESS_TO_RESOURCES.column: FactorCategory.SCHOOL,
     Factors.INTERNET_ACCESS.column: FactorCategory.SCHOOL,
 }
-
-
-ID = {
-    "graph": "graph-bar-chart",
-    "figures-store": "bar-chart-figures-store"
-}
