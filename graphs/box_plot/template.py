@@ -1,27 +1,24 @@
-import os
-import base64
 from dash import html
 from pandas import DataFrame
 
 from .steps_config import STEPS_CONFIG
 from .variables import *
+from utils.loading_img import load_img
+from utils.story_section import (
+    get_steps_number as base_get_steps_number,
+    make_section_layout,
+)
 
 TRANSITION_STEP_INDEX = 1
 
 
 def get_steps_number():
-    return len(STEPS_CONFIG)
-
-
-def _load_img(graph_name: str, index: int) -> str:
-    path = os.path.join("assets", "images", f"{graph_name}-{index}.png")
-    with open(path, "rb") as f:
-        encoded = base64.b64encode(f.read()).decode("utf-8")
-    return f"data:image/png;base64,{encoded}"
+    return base_get_steps_number(STEPS_CONFIG)
 
 
 def make_text_steps(start_index: int = 1):
     steps = []
+
     for i, step_config in enumerate(STEPS_CONFIG):
         step_index = start_index + i
 
@@ -61,15 +58,16 @@ def make_text_steps(start_index: int = 1):
                     ],
                 )
             )
+
     return steps
 
 
-def make_section(df: DataFrame, start_index: int = 1):
+def make_graph_panels(start_index: int = 1):
     graph_panels = []
 
     for i in range(len(STEPS_CONFIG)):
-        step_value = str(start_index + i)
         class_name = "section-graph-frame active" if i == 0 else "section-graph-frame"
+        step_value = str(start_index + i)
 
         if i == TRANSITION_STEP_INDEX:
             graph_panels.append(
@@ -85,7 +83,7 @@ def make_section(df: DataFrame, start_index: int = 1):
                     **{"data-step": step_value},
                     children=[
                         html.Img(
-                            src=_load_img("boxplot", i),
+                            src=load_img("boxplot", i),
                             style={
                                 "width": "100%",
                                 "height": "100%",
@@ -96,33 +94,18 @@ def make_section(df: DataFrame, start_index: int = 1):
                 )
             )
 
-    return html.Section(
-        id="section-boxplot",
-        className="story-section boxplot-section",
-        **{"data-section": "boxplot"},
-        children=[
-            html.Div(
-                className="story-text-column",
-                children=make_text_steps(start_index),
-            ),
-            html.Div(
-                className="story-graph-column",
-                children=[
-                    html.Div(
-                        className="story-graph-sticky",
-                        children=[
-                            html.Div(
-                                className="graph-panel boxplot-panel",
-                                children=[
-                                    html.Div(
-                                        className="graph-panel-inner section-graph-stack",
-                                        children=graph_panels,
-                                    )
-                                ],
-                            )
-                        ],
-                    )
-                ],
-            ),
-        ],
+    return graph_panels
+
+
+def make_section(df: DataFrame, start_index: int = 1):
+    steps = make_text_steps(start_index)
+    graph_panels = make_graph_panels(start_index)
+
+    return make_section_layout(
+        steps=steps,
+        graph_panels=graph_panels,
+        section_id="section-boxplot",
+        section_class="boxplot-section",
+        data_section="boxplot",
+        panel_class="boxplot-panel",
     )
