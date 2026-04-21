@@ -264,7 +264,7 @@ def create_figure(df: pd.DataFrame, selected_filters: dict | None = None) -> go.
         y=[None],
         mode="lines",
         name="Moyenne globale",
-        line=dict(color="#6b7280", width=2, dash="dash"),
+        line=dict(color="#dc2626", width=2.5, dash="dash"),
         showlegend=True,
         hoverinfo="skip",
     )
@@ -274,7 +274,7 @@ def create_figure(df: pd.DataFrame, selected_filters: dict | None = None) -> go.
         y=[None],
         mode="lines",
         name="Moyenne filtrée",
-        line=dict(color="#1f2937", width=3),
+        line=dict(color="#111111", width=2.5, dash="dash"),
         showlegend=True,
         hoverinfo="skip",
     )
@@ -284,6 +284,40 @@ def create_figure(df: pd.DataFrame, selected_filters: dict | None = None) -> go.
     y_min = float(np.min(y_positions)) - 8
     y_max = float(np.max(y_positions)) + 8
 
+    offset_top = (y_max - y_min) * 0.12
+    offset_bottom = (y_max - y_min) * 0.12
+
+    annotations = [
+        dict(
+            x=mean_all,
+            y=-0.06,
+            xref="x",
+            yref="paper",
+            text=f"{mean_all:.1f}",
+            showarrow=False,
+            font=dict(color="white", size=11),
+            bgcolor="#dc2626",
+            bordercolor="#dc2626",
+            borderpad=4,
+        )
+    ]
+
+    if mean_filtered is not None:
+        annotations.append(
+            dict(
+                x=mean_filtered,
+                y=1.06,
+                xref="x",
+                yref="paper",
+                text=f"{mean_filtered:.1f}",
+                showarrow=False,
+                font=dict(color="white", size=11),
+                bgcolor="#111111",
+                bordercolor="#111111",
+                borderpad=4,
+            )
+        )
+
     shapes = [
         dict(
             type="line",
@@ -291,8 +325,8 @@ def create_figure(df: pd.DataFrame, selected_filters: dict | None = None) -> go.
             x1=mean_all,
             y0=y_min,
             y1=y_max,
-            line=dict(color="#6b7280", width=2, dash="dash"),
-            layer="below",
+            line=dict(color="#dc2626", width=2.5, dash="dash"),
+            layer="above",
         )
     ]
 
@@ -304,8 +338,8 @@ def create_figure(df: pd.DataFrame, selected_filters: dict | None = None) -> go.
                 x1=mean_filtered,
                 y0=y_min,
                 y1=y_max,
-                line=dict(color="#1f2937", width=3),
-                layer="below",
+                line=dict(color="#111111", width=2.5, dash="dash"),
+                layer="above",
             )
         )
 
@@ -314,7 +348,7 @@ def create_figure(df: pd.DataFrame, selected_filters: dict | None = None) -> go.
         plot_bgcolor="white",
         autosize=False,
         height=540,
-        margin=dict(l=50, r=20, t=45, b=45),
+        margin=dict(l=50, r=20, t=70, b=70),
         title=dict(
             text="Distribution des scores à l'examen",
             font=dict(size=18, color="#e07b00"),
@@ -351,6 +385,7 @@ def create_figure(df: pd.DataFrame, selected_filters: dict | None = None) -> go.
             borderwidth=1,
             font=dict(size=11, color="#1f2937"),
         ),
+        annotations=annotations
     )
 
     return fig
