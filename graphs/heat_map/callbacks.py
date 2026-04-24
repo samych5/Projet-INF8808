@@ -98,7 +98,7 @@ def register_callbacks(app, df, init_step: int):
         if answer == "yes":
             return "C'est aussi le cas de 75 % des parents, mais cela ne représente pas la réalité. Voici comment 100 parents d'élèves ont répondu à cette même question :"
 
-        return "Pourtant, seulement 25 % des parents pensent cela, mais cela ne représente pas la réalité. Voici comment 100 parents d'élèves ont répondu à cette même question :"
+        return "Pourtant, seulement 25 % des parents pensent cela. Voici comment 100 parents d'élèves ont répondu à cette même question :"
 
     @app.callback(
         Output(ID["pie-wrapper"], "style"),

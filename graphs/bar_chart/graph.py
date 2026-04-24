@@ -11,6 +11,14 @@ from .variables import (
 )
 
 TARGET_COLUMN = "Exam_Score"
+
+COLOR_MIN = -1
+COLOR_MAX = 1
+
+NEGATIVE_COLOR = (180, 0, 0)
+NEUTRAL_COLOR = (230, 240, 255)
+POSITIVE_COLOR = (0, 50, 150)
+
 PALE_BLUE = "rgb(230,240,255)"
 
 CATEGORY_PATTERN = {
@@ -67,29 +75,29 @@ def _compute_correlations(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(results).sort_values("impact", ascending=True)
 
 
+def _interpolate_rgb(color_a, color_b, t: float) -> tuple[int, int, int]:
+    t = max(0, min(1, t))
+    return tuple(
+        int(color_a[i] + (color_b[i] - color_a[i]) * t)
+        for i in range(3)
+    )
+
+
+def _impact_to_color(value: float) -> str:
+    value = max(COLOR_MIN, min(COLOR_MAX, value))
+
+    if value < 0:
+        t = (value - COLOR_MIN) / (0 - COLOR_MIN)
+        r, g, b = _interpolate_rgb(NEGATIVE_COLOR, NEUTRAL_COLOR, t)
+    else:
+        t = value / COLOR_MAX
+        r, g, b = _interpolate_rgb(NEUTRAL_COLOR, POSITIVE_COLOR, t)
+
+    return f"rgb({r},{g},{b})"
+
+
 def _get_diverging_colors(values: pd.Series) -> list[str]:
-    if values.empty:
-        return []
-
-    max_val = max(abs(values.min()), abs(values.max()))
-    colors = []
-
-    for v in values:
-        norm = abs(v) / max_val if max_val != 0 else 0
-        norm = min(norm, 1) * 0.85
-
-        if v >= 0:
-            r = int(230 - 200 * norm)
-            g = int(240 - 200 * norm)
-            b = 255
-        else:
-            r = 255
-            g = int(240 - 200 * norm)
-            b = int(230 - 200 * norm)
-
-        colors.append(f"rgb({r},{g},{b})")
-
-    return colors
+    return [_impact_to_color(v) for v in values]
 
 
 def _rgb_to_rgba(rgb_color: str, alpha: float) -> str:
@@ -166,17 +174,17 @@ def _add_colorbar_trace(fig: go.Figure):
             marker=dict(
                 size=10,
                 colorscale=[
-                    [0, "rgb(180,0,0)"],
-                    [0.5, "rgb(230,240,255)"],
-                    [1, "rgb(0,50,150)"],
+                    [0, f"rgb{NEGATIVE_COLOR}"],
+                    [0.5, f"rgb{NEUTRAL_COLOR}"],
+                    [1, f"rgb{POSITIVE_COLOR}"],
                 ],
-                cmin=-1,
-                cmax=0.75,
-                color=[-1, 0, 0.75],
+                cmin=COLOR_MIN,
+                cmax=COLOR_MAX,
+                color=[COLOR_MIN, 0, COLOR_MAX],
                 showscale=True,
                 colorbar=dict(
                     title="Corrélation",
-                    tickvals=[-1, 0, 0.75],
+                    tickvals=[COLOR_MIN, 0, COLOR_MAX],
                     ticktext=[
                         "Fortement négative",
                         "Faible",

@@ -9,7 +9,7 @@ from utils.story_section import (
     make_section_layout,
 )
 
-TRANSITION_STEP_INDEX = 1
+TRANSITION_STEP_INDEX = 0
 
 
 def get_steps_number():

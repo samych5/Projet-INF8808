@@ -49,6 +49,21 @@ class StepParameters:
 
 STEPS_CONFIG: list[StepParameters] = [
     StepParameters(
+        title="",
+        text="Nous allons maintenant nous intéresser aux facteurs environnementaux qui peuvent influencer la réussite scolaire.",
+        graph_config=GraphConfig(
+            factor_brightness={
+                Factors.PARENTAL_EDUCATION_LEVEL: False,
+                Factors.FAMILY_INCOME: False,
+                Factors.PARENTAL_INVOLVEMENT: False,
+                Factors.ACCESS_TO_RESOURCES: False,
+                Factors.TEACHER_QUALITY: False,
+                Factors.PEER_INFLUENCE: False,
+            },
+        ),
+    ),
+
+    StepParameters(
         title="Comment interpréter ce graphique ?",
         text=html.Ul([
             html.Li("La boîte représente la majorité des résultats. Plus elle est haute, plus les valeurs sont élevées."),
@@ -67,72 +82,60 @@ STEPS_CONFIG: list[StepParameters] = [
             },
         ),
     ),
+
     StepParameters(
-        title="",
-        text="Nous allons maintenant nous intéresser aux facteurs environnementaux qui peuvent influencer la réussite scolaire.",
-        graph_config=GraphConfig(
-            factor_brightness={
-                Factors.PARENTAL_EDUCATION_LEVEL: False,
-                Factors.FAMILY_INCOME: False,
-                Factors.PARENTAL_INVOLVEMENT: False,
-                Factors.ACCESS_TO_RESOURCES: False,
-                Factors.TEACHER_QUALITY: False,
-                Factors.PEER_INFLUENCE: False,
-            },
-        ),
+    title="Facteurs familiaux",
+    text=html.Ul([
+        html.Li("Les élèves dont les parents ont un niveau d'éducation plus élevé obtiennent légèrement de meilleures notes."),
+        html.Li("On observe une tendance similaire pour le revenu familial et l’implication parentale : des niveaux plus élevés de revenu et d’implication sont associés à de meilleures performances."),
+        html.Li("La différence existe, mais elle reste modérée : les groupes se chevauchent beaucoup."),
+    ]),
+    graph_config=GraphConfig(
+        visible_factors=[
+            Factors.PARENTAL_EDUCATION_LEVEL,
+            Factors.FAMILY_INCOME,
+            Factors.PARENTAL_INVOLVEMENT,
+            Factors.ACCESS_TO_RESOURCES,
+            Factors.TEACHER_QUALITY,
+            Factors.PEER_INFLUENCE,
+        ],
+        factor_brightness={
+            Factors.PARENTAL_EDUCATION_LEVEL: True,
+            Factors.FAMILY_INCOME: True,
+            Factors.PARENTAL_INVOLVEMENT: True,
+            Factors.ACCESS_TO_RESOURCES: False,
+            Factors.TEACHER_QUALITY: False,
+            Factors.PEER_INFLUENCE: False,
+        },
     ),
+),
+
     StepParameters(
-        title="Milieu familial",
-        text=html.Ul([
-            html.Li("Les élèves dont les parents ont un niveau d'éducation plus élevé obtiennent légèrement de meilleures notes."),
-            html.Li("On voit une tendance similaire pour le revenu familial : un revenu plus élevé est associé à de meilleures performances."),
-            html.Li("La différence existe, mais elle reste modérée : les groupes se chevauchent beaucoup."),
-        ]),
-        graph_config=GraphConfig(
-            visible_factors=[
-                Factors.PARENTAL_EDUCATION_LEVEL,
-                Factors.FAMILY_INCOME,
-                Factors.PARENTAL_INVOLVEMENT,
-                Factors.ACCESS_TO_RESOURCES,
-                Factors.TEACHER_QUALITY,
-                Factors.PEER_INFLUENCE,
-            ],
-            factor_brightness={
-                Factors.PARENTAL_EDUCATION_LEVEL: True,
-                Factors.FAMILY_INCOME: True,
-                Factors.PARENTAL_INVOLVEMENT: False,
-                Factors.ACCESS_TO_RESOURCES: False,
-                Factors.TEACHER_QUALITY: False,
-                Factors.PEER_INFLUENCE: False,
-            },
-        ),
+    title="Encadrement scolaire",
+    text=html.Ul([
+        html.Li("Les élèves ayant un meilleur accès aux ressources et bénéficiant d’enseignants de meilleure qualité obtiennent légèrement de meilleures notes."),
+        html.Li("La différence existe, mais elle reste modérée : les groupes se chevauchent beaucoup."),
+        html.Li("L'influence des pairs a peu d'impact."),
+    ]),
+    graph_config=GraphConfig(
+        visible_factors=[
+            Factors.PARENTAL_EDUCATION_LEVEL,
+            Factors.FAMILY_INCOME,
+            Factors.PARENTAL_INVOLVEMENT,
+            Factors.ACCESS_TO_RESOURCES,
+            Factors.TEACHER_QUALITY,
+            Factors.PEER_INFLUENCE,
+        ],
+        factor_brightness={
+            Factors.PARENTAL_EDUCATION_LEVEL: False,
+            Factors.FAMILY_INCOME: False,
+            Factors.PARENTAL_INVOLVEMENT: False,
+            Factors.ACCESS_TO_RESOURCES: True,
+            Factors.TEACHER_QUALITY: True,
+            Factors.PEER_INFLUENCE: True,
+        },
     ),
-    StepParameters(
-        title="Encadrement scolaire",
-        text=html.Ul([
-            html.Li("Les élèves dont les parents s'impliquent, qui ont un meilleur accès aux ressources et dont la qualité des enseignants est meilleure obtiennent légèrement de meilleures notes."),
-            html.Li("La différence existe, mais elle reste modérée : les groupes se chevauchent beaucoup."),
-            html.Li("L'influence des pairs a peu d'impact."),
-        ]),
-        graph_config=GraphConfig(
-            visible_factors=[
-                Factors.PARENTAL_EDUCATION_LEVEL,
-                Factors.FAMILY_INCOME,
-                Factors.PARENTAL_INVOLVEMENT,
-                Factors.ACCESS_TO_RESOURCES,
-                Factors.TEACHER_QUALITY,
-                Factors.PEER_INFLUENCE,
-            ],
-            factor_brightness={
-                Factors.PARENTAL_EDUCATION_LEVEL: False,
-                Factors.FAMILY_INCOME: False,
-                Factors.PARENTAL_INVOLVEMENT: True,
-                Factors.ACCESS_TO_RESOURCES: True,
-                Factors.TEACHER_QUALITY: True,
-                Factors.PEER_INFLUENCE: True,
-            },
-        ),
-    ),
+),
 ]
 
 

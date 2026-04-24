@@ -705,3 +705,26 @@ body {
 .heat-map-step {
   opacity: 1 !important;
 }
+
+.scatter-transition-step {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.scatter-transition-card {
+  position: absolute;
+  left: 0;
+  width: 400%;
+  text-align: center;
+  max-width: none;
+}
+
+.scatter-transition-text {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.6;
+  margin: 0;
+}

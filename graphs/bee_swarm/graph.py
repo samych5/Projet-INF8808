@@ -351,7 +351,7 @@ def create_figure(df: pd.DataFrame, selected_filters: dict | None = None) -> go.
         margin=dict(l=50, r=20, t=70, b=70),
         title=dict(
             text="Distribution des scores à l'examen",
-            font=dict(size=18, color="#e07b00"),
+            font=dict(size=18, color="#000000"),
             x=0.0,
             xanchor="left",
         ),

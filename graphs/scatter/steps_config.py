@@ -31,20 +31,29 @@ class StepParameters:
 
 STEPS_CONFIG: list[StepParameters] = [
     StepParameters(
-        "Les données confirment que les heures consacrées à l'étude ne sont pas seulement un soutien, mais un réel levier ayant un fort impact sur la réussite finale.",
+        "Débutons par analyser l’influence des facteurs liés à l’élève",
+        GraphConfig(
+            show_legend=False,
+            title_graph="",
+            layers=[],
+        ),
+        title="",
+    ),
+    StepParameters(
+        "Les données confirment que les heures consacrées à l'étude ne sont pas seulement un soutien, mais un réel levier ayant un fort impact sur la réussite finale autant chez les hommes que chez les femmes.",
         GraphConfig(
             col_x=ColX.HOURS_STUDIED,
-            title_graph="Impact des heures d'études et pratique d'activités parascolaires",
-            layers=[LinearTrendLayer()],
+            title_graph="Impact des heures d'études sur la note finale",
+            layers=[],
         ),
         title="Heures d'études.",
     ),
     StepParameters(
-        "L'analyse montre que la présence constante en classe demeure un facteur ayant un impact positif sur les résultats scolaires.",
+        "L'analyse montre que la présence constante en classe demeure un facteur ayant un impact positif sur les résultats scolaires chez les hommes comme chez les femmes.",
         GraphConfig(
             col_x=ColX.ATTENDANCE,
-            title_graph="Impact de la présence en classe et la pratique d'activités parascolaires",
-            layers=[LinearTrendLayer()],
+            title_graph="Impact de la présence en classe sur la note finale",
+            layers=[],
         ),
         title="Présence en classe",
     ),

@@ -6,12 +6,10 @@ from dash import dcc
 from .steps_config import GraphConfig, get_step_graph_config
 from .variables import *
 
-COLORS = {Genres.MEN: "#1a6fdb", Genres.WOMEN: "#ff1493"}
-
-SYMBOL_LEGEND_LABELS = {
-    SymbolVar.EXTRACURRICULAR_ACTIVITIES: ("Pratique activité parascolaire", "Ne pratique pas"),
-    SymbolVar.INTERNET_ACCESS: ("Accès internet", "Pas d'accès internet"),
-    SymbolVar.LEARNING_DISORDER: ("Troubles d'apprentissage", "Pas de troubles"),
+POINT_COLOR = "rgba(140, 140, 140, 0.55)"
+TREND_COLORS = {
+    Genres.MEN: "#4da6ff",
+    Genres.WOMEN: "#ff1493",
 }
 
 AXES_X_LABELS = {
@@ -19,58 +17,85 @@ AXES_X_LABELS = {
     ColX.ATTENDANCE.value: "Taux de présence en classe (%)",
 }
 
+
+def _add_trend_line(
+    fig,
+    sub_df: pd.DataFrame,
+    x_col: str,
+    color: str,
+    name: str,
+    dash: str = "solid",
+):
+    if len(sub_df) < 2:
+        return
+
+    x = sub_df[x_col].astype(float).to_numpy()
+    y = sub_df["Exam_Score"].astype(float).to_numpy()
+
+    coef = np.polyfit(x, y, 1)
+    poly = np.poly1d(coef)
+
+    x_line = np.linspace(x.min(), x.max(), 100)
+    y_line = poly(x_line)
+
+    fig.add_trace(
+        go.Scatter(
+            x=x_line,
+            y=y_line,
+            mode="lines",
+            name=name,
+            line=dict(
+                color=color,
+                width=4,
+                dash=dash,
+            ),
+            hoverinfo="skip",
+        )
+    )
+
+
 def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
     label_x = AXES_X_LABELS.get(config.col_x, config.col_x)
     fig = go.Figure()
 
-    col_symbol_enum = next((s for s in SymbolVar if s.value == config.col_symbol), None)
-    legend_labels = SYMBOL_LEGEND_LABELS.get(col_symbol_enum, (config.col_symbol + " Oui", config.col_symbol + " Non"))
-    label_oui, label_non = legend_labels
+    # Tous les points en gris
+    fig.add_trace(
+        go.Scatter(
+            x=df[config.col_x],
+            y=df["Exam_Score"],
+            mode="markers",
+            name="Élèves",
+            marker=dict(
+                color=POINT_COLOR,
+                symbol="circle",
+                size=7,
+                line=dict(width=0),
+            ),
+            hoverinfo="skip",
+        )
+    )
 
-    vals = df[config.col_symbol].dropna().unique()
-    val_oui = vals[0]
-    val_non = vals[1] if len(vals) > 1 else vals[0]
+    # Courbe de tendance Femmes (dessinée en premier)
+    femmes = df[df["Genre"] == Genres.WOMEN.value].dropna(subset=[config.col_x, "Exam_Score"])
+    _add_trend_line(
+    fig,
+    femmes,
+    config.col_x,
+    TREND_COLORS[Genres.WOMEN],
+    "Tendance - Femmes",
+    dash="solid",
+    )
 
-    for genre in Genres:
-        if genre.value not in config.visible_genres:
-            continue
-
-        color = COLORS[genre]
-
-        for val, opacity, show in [
-            (val_oui, 0.65, True),
-            (val_non, 0.20, False),
-        ]:
-            mask = (df["Genre"] == genre.value) & (df[config.col_symbol] == val)
-            sub = df[mask]
-
-            fig.add_trace(go.Scatter(
-                x=sub[config.col_x],
-                y=sub["Exam_Score"],
-                mode="markers",
-                name=genre.value,
-                showlegend=show,
-                legendgroup=genre.value,
-                marker=dict(
-                    color=color,
-                    symbol="circle",
-                    size=7,
-                    opacity=opacity,
-                    line=dict(width=1.4, color=color),
-                ),
-            ))
-
-    if config.show_legend:
-        fig.add_trace(go.Scatter(
-            x=[None], y=[None], mode="markers",
-            name=label_oui,
-            marker=dict(color="grey", symbol="circle", size=7, opacity=0.65),
-        ))
-        fig.add_trace(go.Scatter(
-            x=[None], y=[None], mode="markers",
-            name=label_non,
-            marker=dict(color="grey", symbol="circle", size=7, opacity=0.20),
-        ))
+    # Courbe de tendance Hommes (dessinée après, donc au-dessus)
+    hommes = df[df["Genre"] == Genres.MEN.value].dropna(subset=[config.col_x, "Exam_Score"])
+    _add_trend_line(
+    fig,
+    hommes,
+    config.col_x,
+    TREND_COLORS[Genres.MEN],
+    "Tendance - Hommes",
+    dash="dash",
+    )
 
     fig.update_layout(
         title=dict(
@@ -84,14 +109,12 @@ def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
         plot_bgcolor="white",
         paper_bgcolor="white",
         font=dict(family="DM Sans, Arial", size=13, color="#1a1a1a"),
-        showlegend=config.show_legend,
+        showlegend=True,
         legend=dict(
             bgcolor="rgba(255,255,255,0.9)",
             bordercolor="#d8d0c0",
             borderwidth=1,
         ),
-        legend_itemclick=False if not config.enable_interactions else "toggle",
-        legend_itemdoubleclick=False if not config.enable_interactions else "toggleothers",
         margin=dict(l=60, r=20, t=60, b=60),
         hovermode="closest",
         xaxis=dict(
@@ -102,9 +125,6 @@ def create_figure(df: pd.DataFrame, config: GraphConfig) -> go.Figure:
         transition=dict(duration=0),
         dragmode=False,
     )
-
-    for layer in config.layers:
-        layer.apply(fig, df, config)
 
     fig.update_xaxes(
         showgrid=True,
