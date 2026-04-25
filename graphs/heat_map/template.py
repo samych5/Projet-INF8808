@@ -39,7 +39,7 @@ def make_question_block():
                 className="heat-map-question-card",
                 children=[
                     html.H2(
-                        "Penses-tu que la distance entre le domicile et l'école influence la note finale ?",
+                        "Pensez-vous que la distance entre le domicile et l'école influence la note finale ?",
                         className="heat-map-question-title",
                     ),
                     html.Div(
