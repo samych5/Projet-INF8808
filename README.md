@@ -9,6 +9,14 @@ Afin de rendre les transitions plus fluides lors de la navigation, les graphique
 
 Cette approche permet d’éviter de recalculer ou de redessiner les graphiques Plotly à chaque changement d’étape, ce qui améliore la fluidité de l’expérience utilisateur.
 
+## Dépendances
+
+Les dépendances nécessaires au projet se trouvent dans le fichier : `requirements.txt`
+
+Pour les installer :
+
+`pip install -r requirements.txt`
+
 ## Lancement de l’application
 
 Le script principal pour lancer l’application en local est :
@@ -37,11 +45,3 @@ Chaque dossier de graphique gère l’affichage et la génération du graphique 
 - `graph.py` : contient le code responsable de générer le graphique avec Plotly
 
 Le fichier `template.py` principal de l’application appelle les différents fichiers `template.py` présents dans les dossiers de graphiques.
-
-## Dépendances
-
-Les dépendances nécessaires au projet se trouvent dans le fichier : `requirements.txt`
-
-Pour les installer :
-
-`pip install -r requirements.txt`
